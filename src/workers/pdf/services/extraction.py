@@ -6,7 +6,7 @@ from ..schemas import FieldOutput, FieldSpec, ScoredCandidate, Page, PageContext
 from ..services import KeyCandidateFinder, TableItemsExtractor, ValueCandidateFinder, TypeValidator, FieldScorer, ConflictResolver
 from ..adapters import PdfHandle
 from ..profiles.base import FiscalProfile
-from ..specs import PRIORITY_FIELD_SPECS, SectionId
+from ..specs import FIELD_SPECS, SectionId
 from ..table import parse_table
 
 logging.basicConfig(
@@ -151,7 +151,7 @@ class ExtractionService:
         first_page = doc.pages[0]
 
         sections = profile.extract(page=first_page)
-        fields = profile.resolve_fields(PRIORITY_FIELD_SPECS)
+        fields = profile.resolve_fields(FIELD_SPECS)
 
         field_outputs = self._extract_fields(fields, first_page, sections)
 
