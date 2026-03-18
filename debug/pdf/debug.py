@@ -8,7 +8,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from workers.pdf import PdfHandle, WordExtractionConfig, DanfeNfe55Profile, create_extraction_service
-from .drawer import draw_debug_pdf
+
+try:
+    from .drawer import draw_debug_pdf
+except ImportError:
+    from drawer import draw_debug_pdf
 
 DEBUG_ROOT = Path(__file__).resolve().parent.parent / "output"
 
