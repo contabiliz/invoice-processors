@@ -1,3 +1,7 @@
+# Debug output
+src/debug/output/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
