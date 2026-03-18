@@ -1,5 +1,6 @@
 """Quick local script — parse PDFs and generate debug overlays."""
 
+import csv
 import json
 import logging
 import sys
@@ -26,6 +27,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Flags:
     create_json: bool = False
+    create_table_csv: bool = False
     draw_sections: bool = False
     draw_edges: bool = False
     draw_vertices: bool = False
@@ -72,6 +74,18 @@ def main(pdf_path: Path, flags: Flags) -> None:
             vertices=vertices,
         )
 
+    if flags.create_table_csv:
+        csv_path = debug_dir / f"{pdf_path.stem}_table.csv"
+        if output.records:
+            fieldnames = list(output.records[0].keys())
+            with csv_path.open("w", newline="", encoding="utf-8") as f:
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writeheader()
+                writer.writerows(output.records)
+            logger.info("Table CSV saved to %s (%d rows)", csv_path, len(output.records))
+        else:
+            logger.warning("No table records extracted — CSV not created.")
+
     if flags.create_json:
         fields_path = debug_dir / f"{pdf_path.stem}_fields.json"
         fields_json = {
@@ -94,12 +108,13 @@ if __name__ == "__main__":
     try:
         pdf_path = Path(sys.argv[1])
     except IndexError:
-        print("Usage: python -m debug.pdf.debug <pdf_path> [--json] [--sections] [--edges] [--vertices]")
+        print("Usage: python -m debug.pdf.debug <pdf_path> [--json] [--table] [--sections] [--edges] [--vertices]")
         print("       Run from the project root with the package installed (pip install -e .)")
         sys.exit(1)
 
     flags = Flags(
         create_json="--json" in sys.argv,
+        create_table_csv="--table" in sys.argv,
         draw_sections="--sections" in sys.argv,
         draw_edges="--edges" in sys.argv,
         draw_vertices="--vertices" in sys.argv,
