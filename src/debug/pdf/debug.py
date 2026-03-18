@@ -90,7 +90,7 @@ if __name__ == "__main__":
     try:
         pdf_path = Path(sys.argv[1])
     except IndexError:
-        print("Usage: python main_debug.py <pdf_path> [--json] [--sections] [--edges] [--vertices]")
+        print("Usage: python -m debug.pdf.debug <pdf_path> [--json] [--sections] [--edges] [--vertices]")
         sys.exit(1)
 
     flags = Flags(
