@@ -1,3 +1,4 @@
+from .extraction import ExtractionService
 from .table_items_extractor import TableItemsExtractor, TableExtractionResult, TableExtractionCandidate
 from .key_candidate_finder import KeyCandidateFinder
 from .value_candidate_finder import ValueCandidateFinder
