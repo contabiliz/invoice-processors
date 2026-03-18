@@ -57,9 +57,6 @@ def _missing_to_output(reason: str) -> FieldOutput:
 
 
 class ExtractionService:
-    DEBUG_DIR = Path(__file__).parent / "debug"
-    DEBUG_DIR.mkdir(parents=True, exist_ok=True)
-
     def __init__(
         self,
         key_candidate_finder: KeyCandidateFinder,
@@ -144,10 +141,7 @@ class ExtractionService:
             logger.warning("No tables extracted by any strategy.")
             return []
 
-        records = parse_table(
-            table_output.tables,
-            debug_csv=self.DEBUG_DIR / f"parsed_table_{table_output.strategy_name}.csv",
-        )
+        records = parse_table(table_output.tables)
         logger.info("Parsed %d records.", len(records))
         return records
 

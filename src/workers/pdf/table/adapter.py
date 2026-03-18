@@ -153,13 +153,4 @@ def parse_table(
         dict(zip(str_columns, row)) for row in content
     ]
 
-    if debug_csv is not None:
-        import csv
-
-        with open(debug_csv, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=str_columns)
-            writer.writeheader()
-            writer.writerows(records)
-        logger.info("Debug CSV written to %s", debug_csv)
-
     return records
