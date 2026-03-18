@@ -105,6 +105,7 @@ python -m debug.pdf.debug <pdf_path> [flags]
 | Flag           | Effect                                                      |
 |----------------|-------------------------------------------------------------|
 | `--json`       | Dump extracted fields to `{stem}_fields.json`               |
+| `--table`      | Dump extracted table records to `{stem}_table.csv`           |
 | `--sections`   | Draw section boundaries (blue filled rectangles with labels) |
 | `--edges`      | Draw detected edges (red = horizontal, blue = vertical)     |
 | `--vertices`   | Draw detected vertices (green circles at edge intersections) |
@@ -112,8 +113,8 @@ python -m debug.pdf.debug <pdf_path> [flags]
 ### Examples
 
 ```bash
-# Full debug — sections, edges, vertices, and JSON output
-python -m debug.pdf.debug invoices/danfe_001.pdf --sections --edges --vertices --json
+# Full debug — sections, edges, vertices, JSON, and table CSV
+python -m debug.pdf.debug invoices/danfe_001.pdf --sections --edges --vertices --json --table
 
 # Only visual section boundaries
 python -m debug.pdf.debug invoices/danfe_001.pdf --sections
@@ -129,7 +130,8 @@ Artifacts are written to `debug/output/pdf_{stem}/`:
 ```
 debug/output/pdf_1/
 ├── 1_debug.pdf          # Annotated PDF with requested overlays
-└── 1_fields.json        # Extracted field values (when --json is used)
+├── 1_fields.json        # Extracted field values (when --json is used)
+└── 1_table.csv          # Product/service table records (when --table is used)
 ```
 
 ### Debug overlay colors
