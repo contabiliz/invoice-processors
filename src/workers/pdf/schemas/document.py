@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Literal
 
-from ..specs import SectionId
+from ..enums import SectionId
 
 
 @dataclass(frozen=True, slots=True)

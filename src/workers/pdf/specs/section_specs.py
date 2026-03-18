@@ -1,15 +1,8 @@
 """Canonical section specs for DANFE NF-e 55 layout."""
 
-from enum import StrEnum
 from typing import Final
 
-
-class SectionId(StrEnum):
-    DESTINATARIO_REMETENTE = "DESTINATARIO_REMETENTE"
-    HEADER = "HEADER"
-    DADOS_PRODUTOS_SERVICOS = "DADOS_PRODUTOS_SERVICOS"
-    CALCULO_IMPOSTO = "CALCULO_IMPOSTO"
-    INFORMACOES_ENTREGA = "INFORMACOES_ENTREGA"
+from ..enums import SectionId
 
 
 SECTION_LABELS: Final[dict[SectionId, str]] = {

@@ -3,7 +3,12 @@ from pathlib import Path
 from dataclasses import dataclass
 
 from ..schemas import FieldOutput, FieldSpec, ScoredCandidate, Page, PageContext, Section, WordBox
-from ..services import KeyCandidateFinder, TableItemsExtractor, ValueCandidateFinder, TypeValidator, FieldScorer, ConflictResolver
+from .key_candidate_finder import KeyCandidateFinder
+from .value_candidate_finder import ValueCandidateFinder
+from .type_validator import TypeValidator
+from .table_items_extractor import TableItemsExtractor
+from .field_scorer import FieldScorer
+from .conflict_resolver import ConflictResolver
 from ..adapters import PdfHandle
 from ..profiles.base import FiscalProfile
 from ..specs import FIELD_SPECS, SectionId

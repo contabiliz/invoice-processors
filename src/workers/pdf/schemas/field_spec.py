@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from ..specs import SectionId
+from ..enums import SectionId
 
 @dataclass(frozen=True)
 class FieldSpec:
