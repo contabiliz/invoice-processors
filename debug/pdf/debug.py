@@ -8,9 +8,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from workers.pdf import PdfHandle, WordExtractionConfig, DanfeNfe55Profile, create_extraction_service
-from drawer import draw_debug_pdf
+from .drawer import draw_debug_pdf
 
-DEBUG_ROOT = Path(__file__).parent.parent / "output"
+DEBUG_ROOT = Path(__file__).resolve().parent.parent / "output"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -91,6 +91,7 @@ if __name__ == "__main__":
         pdf_path = Path(sys.argv[1])
     except IndexError:
         print("Usage: python -m debug.pdf.debug <pdf_path> [--json] [--sections] [--edges] [--vertices]")
+        print("       Run from the project root with the package installed (pip install -e .)")
         sys.exit(1)
 
     flags = Flags(

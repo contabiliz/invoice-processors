@@ -17,43 +17,45 @@ pip install -e .
 ## Project structure
 
 ```
-src/
-├── workers/pdf/                  # Main extraction package
-│   ├── adapters/                 # PDF library wrappers
-│   │   ├── handle.py             # PdfHandle — single entry-point composing both adapters
-│   │   ├── pdfplumber_adapter.py # Text/word extraction, table cropping
-│   │   └── pymupdf_adapter.py   # Edge/vertex extraction from drawings
-│   ├── profiles/                 # Document layout definitions
-│   │   ├── base.py               # FiscalProfile — abstract base
-│   │   └── danfe_nfe55.py        # DANFE NF-e 55 layout rules
-│   ├── schemas/                  # Immutable data models
-│   │   ├── document.py           # WordBox, Edge, Vertex, Section, Column, Page, Document
-│   │   ├── field_spec.py         # FieldSpec — declarative field definitions
-│   │   ├── field_output.py       # FieldOutput — extraction result per field
-│   │   └── ...                   # KeyCandidate, ValueCandidate, ScoredCandidate, etc.
-│   ├── services/                 # Extraction pipeline
-│   │   ├── extraction.py         # ExtractionService — orchestrates the full pipeline
+├── src/workers/pdf/                  # Main extraction package
+│   ├── adapters/                     # PDF library wrappers
+│   │   ├── handle.py                 # PdfHandle — single entry-point composing both adapters
+│   │   ├── pdfplumber_adapter.py     # Text/word extraction, table cropping
+│   │   └── pymupdf_adapter.py       # Edge/vertex extraction from drawings
+│   ├── profiles/                     # Document layout definitions
+│   │   ├── base.py                   # FiscalProfile — abstract base
+│   │   └── danfe_nfe55.py            # DANFE NF-e 55 layout rules
+│   ├── schemas/                      # Immutable data models
+│   │   ├── document.py               # WordBox, Edge, Vertex, Section, Column, Page, Document
+│   │   ├── field_spec.py             # FieldSpec — declarative field definitions
+│   │   ├── field_output.py           # FieldOutput — extraction result per field
+│   │   └── ...                       # KeyCandidate, ValueCandidate, ScoredCandidate, etc.
+│   ├── services/                     # Extraction pipeline
+│   │   ├── extraction.py             # ExtractionService — orchestrates the full pipeline
 │   │   ├── key_candidate_finder.py
 │   │   ├── value_candidate_finder.py
-│   │   ├── type_validator.py     # CNPJ, CPF, moeda, data, etc.
-│   │   ├── field_scorer.py       # Weighted scoring (key match, distance, type validity)
-│   │   ├── conflict_resolver.py  # Picks best candidate above threshold
+│   │   ├── type_validator.py         # CNPJ, CPF, moeda, data, etc.
+│   │   ├── field_scorer.py           # Weighted scoring (key match, distance, type validity)
+│   │   ├── conflict_resolver.py      # Picks best candidate above threshold
 │   │   └── table_items_extractor.py
-│   ├── spatial/                  # Geometry helpers and section slicing
-│   ├── specs/                    # Declarative configuration
-│   │   ├── fields_specs.py       # FIELD_SPECS — labels, aliases, value types, zones
-│   │   ├── section_specs.py      # START_ANCHORS / END_ANCHORS per SectionId
+│   ├── spatial/                      # Geometry helpers and section slicing
+│   ├── specs/                        # Declarative configuration
+│   │   ├── fields_specs.py           # FIELD_SPECS — labels, aliases, value types, zones
+│   │   ├── section_specs.py          # START_ANCHORS / END_ANCHORS per SectionId
 │   │   └── table_strategies_specs.py
-│   ├── table/                    # Table parsing and scoring
-│   ├── text/                     # Normalization and validation
-│   ├── enums.py                  # SectionId enum
-│   └── factory.py                # create_extraction_service() — DI wiring
+│   ├── table/                        # Table parsing and scoring
+│   ├── text/                         # Normalization and validation
+│   ├── enums.py                      # SectionId enum
+│   └── factory.py                    # create_extraction_service() — DI wiring
 │
-└── debug/                        # Debug tooling (not part of the package)
-    ├── pdf/
-    │   ├── debug.py              # CLI entry-point
-    │   └── drawer.py             # PDF overlay rendering
-    └── output/                   # Generated debug artifacts (gitignored)
+├── debug/                            # Debug tooling (not part of the package)
+│   ├── pdf/
+│   │   ├── debug.py                  # CLI entry-point
+│   │   └── drawer.py                 # PDF overlay rendering
+│   └── output/                       # Generated debug artifacts (gitignored)
+│
+├── pyproject.toml
+└── README.md
 ```
 
 ## Extraction pipeline
@@ -90,12 +92,11 @@ ExtractionOutput { sections, fields, records }
 
 ## Debug tooling
 
-The `src/debug/pdf/` directory contains a CLI tool for inspecting extraction results visually. Run it from the `src/` directory so both `workers` and `debug` packages resolve correctly.
+The `debug/` directory at the project root contains a CLI tool for inspecting extraction results visually. Requires the package installed in editable mode (`pip install -e .`).
 
 ### Usage
 
 ```bash
-cd src
 python -m debug.pdf.debug <pdf_path> [flags]
 ```
 
@@ -112,21 +113,21 @@ python -m debug.pdf.debug <pdf_path> [flags]
 
 ```bash
 # Full debug — sections, edges, vertices, and JSON output
-python -m debug.pdf.debug ../invoices/danfe_001.pdf --sections --edges --vertices --json
+python -m debug.pdf.debug invoices/danfe_001.pdf --sections --edges --vertices --json
 
 # Only visual section boundaries
-python -m debug.pdf.debug ../invoices/danfe_001.pdf --sections
+python -m debug.pdf.debug invoices/danfe_001.pdf --sections
 
 # Only geometric overlay
-python -m debug.pdf.debug ../invoices/danfe_001.pdf --edges --vertices
+python -m debug.pdf.debug invoices/danfe_001.pdf --edges --vertices
 ```
 
 ### Output
 
-Artifacts are written to `src/debug/output/pdf_{stem}/`:
+Artifacts are written to `debug/output/pdf_{stem}/`:
 
 ```
-src/debug/output/pdf_1/
+debug/output/pdf_1/
 ├── 1_debug.pdf          # Annotated PDF with requested overlays
 └── 1_fields.json        # Extracted field values (when --json is used)
 ```
