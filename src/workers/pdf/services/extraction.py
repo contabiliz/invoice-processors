@@ -15,10 +15,6 @@ from ..profiles.base import FiscalProfile
 from ..specs import FIELD_SPECS, SectionId
 from ..table import parse_table
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-)
 logger = logging.getLogger(__name__)
 
 

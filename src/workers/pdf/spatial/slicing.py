@@ -37,9 +37,10 @@ def slice_section(
 
     if end_phrases:
         end_matches = find_phrase_ngram(end_phrases, page.words)
-        end_anchor = next(
-            (w for w in sorted(end_matches, key=lambda w: w.top) if w.top > start_anchor.bottom),
-            None,
+        end_anchor = min(
+            (w for w in end_matches if w.top > start_anchor.bottom),
+            key=lambda w: w.top,
+            default=None,
         )
         if end_anchor:
             bottom = end_anchor.top

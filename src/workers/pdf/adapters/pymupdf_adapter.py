@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
@@ -64,13 +65,22 @@ class PyMuPDFAdapter:
         vertex_tolerance = self._config.vertex_tolerance
         min_edge_length = self._config.min_edge_length
         h_edges = [e for e in edges if e.orientation == "h" and e.length >= min_edge_length]
-        v_edges = [e for e in edges if e.orientation == "v" and e.length >= min_edge_length]
+        v_edges = sorted(
+            (e for e in edges if e.orientation == "v" and e.length >= min_edge_length),
+            key=lambda e: e.x0,
+        )
+        v_edges_x = [e.x0 for e in v_edges]
 
         vertices: list[Vertex] = []
         seen: set[tuple] = set()
 
         for h in h_edges:
-            for v in v_edges:
+            h_left = h.left - vertex_tolerance
+            h_right = h.right + vertex_tolerance
+            v_start = bisect_left(v_edges_x, h_left)
+            v_end = bisect_right(v_edges_x, h_right)
+
+            for v in v_edges[v_start:v_end]:
                 if self._h_contains_x(h, v.x0) and self._v_contains_y(v, h.y0):
                     key = (round(v.x0 / vertex_tolerance), round(h.y0 / vertex_tolerance))
                     if key not in seen:
