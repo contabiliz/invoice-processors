@@ -7,3 +7,8 @@ class SectionId(StrEnum):
     DADOS_PRODUTOS_SERVICOS = "DADOS_PRODUTOS_SERVICOS"
     CALCULO_IMPOSTO = "CALCULO_IMPOSTO"
     INFORMACOES_ENTREGA = "INFORMACOES_ENTREGA"
+
+
+class DocumentStatus(StrEnum):
+    OK = "ok"
+    INSUFFICIENT_DATA = "insufficient_data"
