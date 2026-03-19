@@ -75,8 +75,8 @@ class PyMuPDFAdapter:
         seen: set[tuple] = set()
 
         for h in h_edges:
-            h_left = min(h.x0, h.x1) - vertex_tolerance
-            h_right = max(h.x0, h.x1) + vertex_tolerance
+            h_left = h.left - vertex_tolerance
+            h_right = h.right + vertex_tolerance
             v_start = bisect_left(v_edges_x, h_left)
             v_end = bisect_right(v_edges_x, h_right)
 
