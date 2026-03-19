@@ -29,7 +29,10 @@ def log_word_occurrences(word: str, boxes: list[WordBox]) -> None:
 
 def _validate_phrase_window(window: list[WordBox], tokens: list[str]) -> bool:
     """Check that *window* texts match *tokens* and are spatially contiguous."""
-    if [normalize(w.text) for w in window] != tokens:
+    if len(window) != len(tokens):
+        return False
+
+    if not all(normalize(w.text) == token for w, token in zip(window, tokens)):
         return False
 
     y_coords = [w.top for w in window]
