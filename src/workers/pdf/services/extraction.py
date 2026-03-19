@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 from dataclasses import dataclass
 
+from ..enums import DocumentStatus
 from ..schemas import FieldOutput, FieldSpec, ScoredCandidate, Page, PageContext, Section, WordBox
 from .key_candidate_finder import KeyCandidateFinder
 from .value_candidate_finder import ValueCandidateFinder
@@ -26,6 +27,7 @@ class ExtractionOutput:
     sections: dict[SectionId, Section]
     fields: dict[str, FieldOutput]
     records: list[dict[str, str | None]]
+    status: DocumentStatus = DocumentStatus.OK
 
 
 def _bbox_to_dict(bbox: WordBox) -> dict[str, float]:
@@ -147,6 +149,21 @@ class ExtractionService:
 
     def extract_document(self, pdf: PdfHandle, profile: FiscalProfile) -> ExtractionOutput:
         doc = pdf.parse()
+
+        if doc.metadata and doc.metadata.status != DocumentStatus.OK:
+            logger.warning(
+                "Document skipped: status=%s (%d words across %d pages).",
+                doc.metadata.status,
+                doc.metadata.total_words,
+                doc.metadata.total_pages,
+            )
+            return ExtractionOutput(
+                sections={},
+                fields={},
+                records=[],
+                status=doc.metadata.status,
+            )
+
         first_page = doc.pages[0]
 
         sections = profile.extract(page=first_page)
@@ -164,4 +181,5 @@ class ExtractionService:
             sections=sections,
             fields=field_outputs,
             records=records,
+            status=DocumentStatus.OK,
         )

@@ -9,11 +9,15 @@ from typing import Any
 
 import pdfplumber
 
-from ..schemas import Document, Page, Section, WordBox
+from ..enums import DocumentStatus
+from ..schemas import Document, DocumentMetadata, Page, Section, WordBox
 
 logger = logging.getLogger(__name__)
 
 RawTables = list[list[list[str | None]]]
+
+MIN_WORDS_THRESHOLD = 30
+
 
 @dataclass
 class WordExtractionConfig:
@@ -92,7 +96,26 @@ class PdfPlumberAdapter:
 
             logger.info("Page %d: %d word boxes extracted.", i, len(words))
 
-        return Document(pages=pages)
+        total_words = sum(len(p.words) for p in pages)
+        status = (
+            DocumentStatus.INSUFFICIENT_DATA
+            if total_words <= MIN_WORDS_THRESHOLD
+            else DocumentStatus.OK
+        )
+        metadata = DocumentMetadata(
+            total_pages=len(pages),
+            total_words=total_words,
+            status=status,
+        )
+
+        logger.info(
+            "Document metadata: %d pages, %d words, status=%s.",
+            metadata.total_pages,
+            metadata.total_words,
+            metadata.status,
+        )
+
+        return Document(pages=pages, metadata=metadata)
 
     def parse_tables_from_region(
         self,

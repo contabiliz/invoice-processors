@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Literal
 
-from ..enums import SectionId
+from ..enums import DocumentStatus, SectionId
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,12 +103,21 @@ class Page:
     vertices: List[Vertex] = field(default_factory=list)
     page_number: int = 1
 
+@dataclass(frozen=True, slots=True)
+class DocumentMetadata:
+    """Read-time quality signals about the document."""
+
+    total_pages: int
+    total_words: int
+    status: DocumentStatus
+
 
 @dataclass
 class Document:
     """Aggregates multiple pages."""
 
     pages: List[Page] = field(default_factory=list)
+    metadata: DocumentMetadata | None = None
 
     @property
     def is_empty(self) -> bool:
