@@ -20,7 +20,10 @@ class ConflictResolver:
             best_rejected = max(candidates, key=lambda c: c.score_final)
             logger.warning(
                 "Field '%s': all %d candidates below threshold %.2f (best was %.3f).",
-                field.key, len(candidates), field.min_score, best_rejected.score_final,
+                field.key,
+                len(candidates),
+                field.min_score,
+                best_rejected.score_final,
             )
             return None
 
@@ -31,6 +34,9 @@ class ConflictResolver:
 
         logger.info(
             "Field '%s': picked candidate with score=%.3f method='%s' value='%s'.",
-            field.key, winner.score_final, winner.key.method, winner.value.raw_text,
+            field.key,
+            winner.score_final,
+            winner.key.method,
+            winner.value.raw_text,
         )
         return winner

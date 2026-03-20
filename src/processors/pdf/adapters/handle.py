@@ -61,5 +61,7 @@ class PdfHandle:
         table_settings: dict[str, Any] | None = None,
     ) -> RawTables | None:
         return self._plumber.parse_tables_from_region(
-            region, page_index, table_settings,
+            region,
+            page_index,
+            table_settings,
         )

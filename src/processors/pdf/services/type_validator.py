@@ -13,13 +13,13 @@ from ..text.validators import (
 logger = logging.getLogger(__name__)
 
 _VALIDATORS = {
-    "cnpj":              validate_cnpj,
-    "cpf_ou_cnpj":       validate_cpf_ou_cnpj,
+    "cnpj": validate_cnpj,
+    "cpf_ou_cnpj": validate_cpf_ou_cnpj,
     "texto_numerico_44": validate_texto_numerico_44,
-    "moeda_brl":         validate_moeda_brl,
-    "data":              validate_data,
-    "cidade_uf":         validate_cidade_uf,
-    "texto":             validate_texto,
+    "moeda_brl": validate_moeda_brl,
+    "data": validate_data,
+    "cidade_uf": validate_cidade_uf,
+    "texto": validate_texto,
 }
 
 
@@ -31,4 +31,6 @@ class TypeValidator:
             validator = validate_texto
 
         ok, normalized_value, reason = validator(raw_text)
-        return TypeValidationResult(ok=ok, normalized_value=normalized_value, reason=reason)
+        return TypeValidationResult(
+            ok=ok, normalized_value=normalized_value, reason=reason
+        )

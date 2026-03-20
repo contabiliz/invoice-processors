@@ -23,6 +23,7 @@ class SectionRule:
     start_anchors: Union[str, List[str]]
     end_anchors: Union[str, List[str], None] = None
 
+
 class FiscalProfile(ABC):
     """
     Interface for any fiscal-document layout.
@@ -88,9 +89,7 @@ class FiscalProfile(ABC):
                 resolved.append(spec)
         return resolved
 
-    def extract(
-        self, page: Page
-    ) -> dict[SectionId, Section]:
+    def extract(self, page: Page) -> dict[SectionId, Section]:
         """Run the full extraction pipeline on a single page."""
         sections = self.extract_sections(page)
         return sections

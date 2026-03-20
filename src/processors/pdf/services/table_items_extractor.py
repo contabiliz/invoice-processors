@@ -11,11 +11,13 @@ logger = logging.getLogger(__name__)
 
 RawTables = list[list[list[str | None]]]
 
+
 @dataclass
 class TableExtractionCandidate:
     strategy_name: str
     tables: RawTables | None
     score: TableScore
+
 
 @dataclass
 class TableExtractionResult:
@@ -23,6 +25,7 @@ class TableExtractionResult:
     strategy_name: str
     score: TableScore
     all_candidates: list[TableExtractionCandidate] = field(default_factory=list)
+
 
 class TableItemsExtractor:
     def extract(

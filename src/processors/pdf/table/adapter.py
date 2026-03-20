@@ -140,9 +140,7 @@ def parse_table(
             rows_data_index = 2
         columns = _merge_double_header(columns, second_row)
 
-    str_columns = [
-        (c or "").replace("\n", " ").strip() for c in columns
-    ]
+    str_columns = [(c or "").replace("\n", " ").strip() for c in columns]
 
     col_count = len(str_columns)
     content = [

@@ -16,8 +16,10 @@ _SECTION_ORDER: tuple[SectionId, ...] = (
     SectionId.DADOS_PRODUTOS_SERVICOS,
 )
 
+
 class DanfeNfe55Profile(FiscalProfile):
     """Layout rules for DANFE NF-e 55."""
+
     @property
     def table_strategies(self) -> list[TableStrategy]:
         return DEFAULT_STRATEGIES
@@ -28,10 +30,10 @@ class DanfeNfe55Profile(FiscalProfile):
 
     def field_overrides(self) -> dict[str, dict]:
         return {
-            "cnpj_emitente":            { "section_id": SectionId.HEADER },
-            "nome_destinatario":        { "section_id": SectionId.DESTINATARIO_REMETENTE },
-            "documento_destinatario":   { "section_id": SectionId.DESTINATARIO_REMETENTE },
-            "valor_total_nota":         { "section_id": SectionId.CALCULO_IMPOSTO },
+            "cnpj_emitente": {"section_id": SectionId.HEADER},
+            "nome_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
+            "documento_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
+            "valor_total_nota": {"section_id": SectionId.CALCULO_IMPOSTO},
         }
 
     @property

@@ -31,12 +31,8 @@ START_ANCHORS: Final[dict[SectionId, tuple[str, ...]]] = {
         "DADOS DO PRODUTO/SERVIÇO",
         "DADOS DOS PRODUTOS",
     ),
-    SectionId.CALCULO_IMPOSTO: (
-        "CÁLCULO DO IMPOSTO",
-    ),
-    SectionId.INFORMACOES_ENTREGA: (
-        "INFORMAÇÕES DO LOCAL DE ENTREGA",
-    ),
+    SectionId.CALCULO_IMPOSTO: ("CÁLCULO DO IMPOSTO",),
+    SectionId.INFORMACOES_ENTREGA: ("INFORMAÇÕES DO LOCAL DE ENTREGA",),
 }
 
 

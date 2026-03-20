@@ -26,6 +26,7 @@ class WordExtractionConfig:
     keep_blank_chars: bool = False
     use_text_flow: bool = False
 
+
 class PdfPlumberAdapter:
     """Holds a pdfplumber PDF open for the entire processing pipeline.
 
@@ -40,7 +41,9 @@ class PdfPlumberAdapter:
     ) -> None:
         self._path: Path = Path(path)
         self._pdf: pdfplumber.PDF | None = None
-        self._word_extraction_config: WordExtractionConfig = word_extraction_config or WordExtractionConfig()
+        self._word_extraction_config: WordExtractionConfig = (
+            word_extraction_config or WordExtractionConfig()
+        )
 
     @property
     def path(self) -> Path:
@@ -76,7 +79,6 @@ class PdfPlumberAdapter:
                     x1=w["x1"],
                     bottom=w["bottom"],
                 )
-
                 for w in pdf_page.extract_words(
                     x_tolerance=self._word_extraction_config.x_tolerance,
                     y_tolerance=self._word_extraction_config.y_tolerance,
@@ -148,4 +150,3 @@ class PdfPlumberAdapter:
             )
 
         return tables or None
-

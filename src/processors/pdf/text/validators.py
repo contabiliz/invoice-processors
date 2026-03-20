@@ -4,13 +4,38 @@ import re
 from datetime import datetime
 
 _UF_CODES = {
-    "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO",
-    "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI",
-    "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+    "AC",
+    "AL",
+    "AP",
+    "AM",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MT",
+    "MS",
+    "MG",
+    "PA",
+    "PB",
+    "PR",
+    "PE",
+    "PI",
+    "RJ",
+    "RN",
+    "RS",
+    "RO",
+    "RR",
+    "SC",
+    "SP",
+    "SE",
+    "TO",
 }
 
 
 # -- CNPJ -------------------------------------------------------------------
+
 
 def _cnpj_check_digit(digits: str, weights: list[int]) -> int:
     remainder = sum(int(d) * w for d, w in zip(digits, weights)) % 11
@@ -27,11 +52,14 @@ def validate_cnpj(raw: str) -> tuple[bool, str | None, str | None]:
     d2 = _cnpj_check_digit(digits[:13], [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2])
     if int(digits[12]) != d1 or int(digits[13]) != d2:
         return False, None, "Dígitos verificadores do CNPJ inválidos"
-    normalized = f"{digits[:2]}.{digits[2:5]}.{digits[5:8]}/{digits[8:12]}-{digits[12:]}"
+    normalized = (
+        f"{digits[:2]}.{digits[2:5]}.{digits[5:8]}/{digits[8:12]}-{digits[12:]}"
+    )
     return True, normalized, None
 
 
 # -- CPF --------------------------------------------------------------------
+
 
 def _cpf_check_digit(digits: str, weights: list[int]) -> int:
     remainder = (sum(int(d) * w for d, w in zip(digits, weights)) * 10) % 11
@@ -54,6 +82,7 @@ def validate_cpf(raw: str) -> tuple[bool, str | None, str | None]:
 
 # -- CPF ou CNPJ ------------------------------------------------------------
 
+
 def validate_cpf_ou_cnpj(raw: str) -> tuple[bool, str | None, str | None]:
     digits = re.sub(r"\D", "", raw)
     if len(digits) == 14:
@@ -65,10 +94,15 @@ def validate_cpf_ou_cnpj(raw: str) -> tuple[bool, str | None, str | None]:
 
 # -- Chave de acesso (44 dígitos) -------------------------------------------
 
+
 def validate_texto_numerico_44(raw: str) -> tuple[bool, str | None, str | None]:
     digits = re.sub(r"\D", "", raw)
     if len(digits) != 44:
-        return False, None, f"Chave de acesso deve ter 44 dígitos, encontrado {len(digits)}"
+        return (
+            False,
+            None,
+            f"Chave de acesso deve ter 44 dígitos, encontrado {len(digits)}",
+        )
     return True, digits, None
 
 
@@ -149,6 +183,7 @@ def validate_cidade_uf(raw: str) -> tuple[bool, str | None, str | None]:
 
 
 # -- Texto ------------------------------------------------------------------
+
 
 def validate_texto(raw: str) -> tuple[bool, str | None, str | None]:
     normalized = " ".join(raw.split())

@@ -50,8 +50,7 @@ def _header_score(first_row: list[str | None]) -> float:
     fill_ratio = filled / len(non_null)
 
     coherent = sum(
-        1 for c in non_null
-        if c.strip() and len(c.split()) <= _MAX_HEADER_CELL_WORDS
+        1 for c in non_null if c.strip() and len(c.split()) <= _MAX_HEADER_CELL_WORDS
     )
     coherence = coherent / len(non_null)
 
@@ -72,10 +71,7 @@ def _fill_rate(data_rows: list[list[str | None]]) -> float:
         return 0.0
 
     filled = sum(
-        1
-        for row in data_rows
-        for cell in row
-        if cell is not None and cell.strip()
+        1 for row in data_rows for cell in row if cell is not None and cell.strip()
     )
     return filled / total_cells
 
@@ -89,9 +85,9 @@ def _row_count_score(data_rows: list[list[str | None]]) -> float:
     return 1.0
 
 
-def _flatten_tables(tables: list[list[list[str | None]]]) -> tuple[
-    list[str | None], list[list[str | None]]
-]:
+def _flatten_tables(
+    tables: list[list[list[str | None]]],
+) -> tuple[list[str | None], list[list[str | None]]]:
     """Extract the header row and all data rows from pdfplumber tables.
 
     Handles both single-table and multi-table (header in table 0,

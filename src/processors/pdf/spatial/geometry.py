@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Protocol
 from ..schemas import WordBox
 
+
 class HasRect(Protocol):
     """Any object with full rectangular boundaries."""
 
@@ -12,6 +13,7 @@ class HasRect(Protocol):
     top: float
     x1: float
     bottom: float
+
 
 def filter_words_in_rect(
     words: list[WordBox],

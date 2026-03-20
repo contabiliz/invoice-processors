@@ -1,5 +1,12 @@
 import logging
-from ..schemas import FieldSpec, KeyCandidate, ValueCandidate, PageContext, Vertex, WordBox
+from ..schemas import (
+    FieldSpec,
+    KeyCandidate,
+    ValueCandidate,
+    PageContext,
+    Vertex,
+    WordBox,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -7,6 +14,7 @@ _SAME_ROW_Y_DRIFT = 4.0
 _MAX_H_GAP = 15.0
 _BELOW_ROW_Y_DRIFT = 3.0
 _VERTEX_TOL = 5.0
+
 
 def _merge_boxes(words: list[WordBox], zone: str) -> ValueCandidate:
     return ValueCandidate(
@@ -40,9 +48,9 @@ def _group_by_gap(words: list[WordBox]) -> list[list[WordBox]]:
 def _same_row_words(key: WordBox, ctx: PageContext) -> list[WordBox]:
     return sorted(
         [
-            w for w in ctx.words
-            if w.x0 >= key.x1 - 1.0
-            and abs(w.top - key.top) <= _SAME_ROW_Y_DRIFT
+            w
+            for w in ctx.words
+            if w.x0 >= key.x1 - 1.0 and abs(w.top - key.top) <= _SAME_ROW_Y_DRIFT
         ],
         key=lambda w: w.x0,
     )
@@ -77,26 +85,38 @@ def _find_below_key(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
 
     return [_merge_boxes(g, "below_key") for g in _group_by_gap(aligned)]
 
+
 def _find_cell_by_vertices(
-    key: WordBox, vertices: list[Vertex],
+    key: WordBox,
+    vertices: list[Vertex],
 ) -> tuple[float, float, float, float] | None:
     v1_candidates = sorted(
-        [v for v in vertices if v.x <= key.x0 + _VERTEX_TOL and v.y <= key.top + _VERTEX_TOL],
+        [
+            v
+            for v in vertices
+            if v.x <= key.x0 + _VERTEX_TOL and v.y <= key.top + _VERTEX_TOL
+        ],
         key=lambda v: (-v.y, -v.x),
     )
     for v1 in v1_candidates:
-        v2_pool = [v for v in vertices
-                   if abs(v.y - v1.y) <= _VERTEX_TOL
-                   and v.x > v1.x + _VERTEX_TOL
-                   and v.x >= key.x1 - _VERTEX_TOL]
+        v2_pool = [
+            v
+            for v in vertices
+            if abs(v.y - v1.y) <= _VERTEX_TOL
+            and v.x > v1.x + _VERTEX_TOL
+            and v.x >= key.x1 - _VERTEX_TOL
+        ]
         if not v2_pool:
             continue
         v2 = min(v2_pool, key=lambda v: v.x)
 
-        v3_pool = [v for v in vertices
-                   if abs(v.x - v2.x) <= _VERTEX_TOL
-                   and v.y > v2.y + _VERTEX_TOL
-                   and v.y >= key.bottom - _VERTEX_TOL]
+        v3_pool = [
+            v
+            for v in vertices
+            if abs(v.x - v2.x) <= _VERTEX_TOL
+            and v.y > v2.y + _VERTEX_TOL
+            and v.y >= key.bottom - _VERTEX_TOL
+        ]
         if not v3_pool:
             continue
         v3 = min(v3_pool, key=lambda v: v.y)
@@ -121,7 +141,8 @@ def _find_within_cell_bounds(key: WordBox, ctx: PageContext) -> list[ValueCandid
     cell_left, cell_top, cell_right, cell_bottom = cell
     cell_words = sorted(
         [
-            w for w in ctx.words
+            w
+            for w in ctx.words
             if w.x0 >= cell_left - 1.0
             and w.x1 <= cell_right + 1.0
             and w.top >= cell_top - 1.0
@@ -132,7 +153,7 @@ def _find_within_cell_bounds(key: WordBox, ctx: PageContext) -> list[ValueCandid
     )
     if not cell_words:
         return []
-    
+
     logger.debug("Cell words: %d, %s", len(cell_words), [w.text for w in cell_words])
 
     candidates: list[ValueCandidate] = []
@@ -151,10 +172,10 @@ def _find_within_cell_bounds(key: WordBox, ctx: PageContext) -> list[ValueCandid
 
 
 _ZONE_HANDLERS = {
-    "right_of_key":         _find_right_of_key,
+    "right_of_key": _find_right_of_key,
     "same_row_after_colon": _find_same_row_after_colon,
-    "below_key":            _find_below_key,
-    "within_cell_bounds":   _find_within_cell_bounds,
+    "below_key": _find_below_key,
+    "within_cell_bounds": _find_within_cell_bounds,
 }
 
 
@@ -171,7 +192,9 @@ class ValueCandidateFinder:
         for zone in field.search_zones:
             handler = _ZONE_HANDLERS.get(zone)
             if handler is None:
-                logger.warning("Unknown search zone '%s' for field '%s'.", zone, field.key)
+                logger.warning(
+                    "Unknown search zone '%s' for field '%s'.", zone, field.key
+                )
                 continue
 
             for vc in handler(key_candidate.bbox, page_context):
@@ -182,6 +205,9 @@ class ValueCandidateFinder:
 
         logger.debug(
             "Field '%s': %d value candidates from key at (%.1f, %.1f).",
-            field.key, len(candidates), key_candidate.bbox.x0, key_candidate.bbox.top,
+            field.key,
+            len(candidates),
+            key_candidate.bbox.x0,
+            key_candidate.bbox.top,
         )
         return candidates

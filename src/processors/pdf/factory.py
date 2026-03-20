@@ -10,7 +10,10 @@ from .services import (
     ConflictResolver,
 )
 
-def create_extraction_service(pdf: PdfHandle, profile: FiscalProfile) -> ExtractionService:
+
+def create_extraction_service(
+    pdf: PdfHandle, profile: FiscalProfile
+) -> ExtractionService:
     return ExtractionService(
         key_candidate_finder=KeyCandidateFinder(),
         value_candidate_finder=ValueCandidateFinder(),

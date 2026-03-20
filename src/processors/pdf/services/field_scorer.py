@@ -1,18 +1,25 @@
 import logging
-from ..schemas import FieldSpec, KeyCandidate, ValueCandidate, TypeValidationResult, ScoredCandidate, WordBox
+from ..schemas import (
+    FieldSpec,
+    KeyCandidate,
+    ValueCandidate,
+    TypeValidationResult,
+    ScoredCandidate,
+    WordBox,
+)
 
 logger = logging.getLogger(__name__)
 
 # weights: (w_key, w_distance, w_type, w_cross)
 _FIELD_WEIGHTS: dict[str, tuple[float, float, float, float]] = {
-    "chave_acesso":                    (0.25, 0.10, 0.45, 0.20),
-    "cnpj_emitente":                   (0.25, 0.10, 0.45, 0.20),
-    "documento_destinatario":          (0.25, 0.10, 0.45, 0.20),
-    "valor_total_nota":                (0.30, 0.20, 0.35, 0.15),
-    "valor_total":                     (0.30, 0.20, 0.35, 0.15),
-    "data_emissao":                    (0.30, 0.20, 0.35, 0.15),
-    "numero_documento":                (0.30, 0.20, 0.35, 0.15),
-    "nome_destinatario":               (0.40, 0.30, 0.20, 0.10),
+    "chave_acesso": (0.25, 0.10, 0.45, 0.20),
+    "cnpj_emitente": (0.25, 0.10, 0.45, 0.20),
+    "documento_destinatario": (0.25, 0.10, 0.45, 0.20),
+    "valor_total_nota": (0.30, 0.20, 0.35, 0.15),
+    "valor_total": (0.30, 0.20, 0.35, 0.15),
+    "data_emissao": (0.30, 0.20, 0.35, 0.15),
+    "numero_documento": (0.30, 0.20, 0.35, 0.15),
+    "nome_destinatario": (0.40, 0.30, 0.20, 0.10),
     "endereco_destinatario_cidade_uf": (0.35, 0.30, 0.25, 0.10),
 }
 _DEFAULT_WEIGHTS = (0.30, 0.20, 0.35, 0.15)
@@ -69,7 +76,12 @@ class FieldScorer:
 
         logger.debug(
             "Field '%s': key_score=%.2f dist_score=%.2f type_score=%.2f cross=%.2f → final=%.3f",
-            field.key, ks, ds, ts, cs, final,
+            field.key,
+            ks,
+            ds,
+            ts,
+            cs,
+            final,
         )
 
         return ScoredCandidate(

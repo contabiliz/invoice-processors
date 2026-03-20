@@ -2,7 +2,15 @@ import logging
 from dataclasses import dataclass
 
 from ..enums import DocumentStatus
-from ..schemas import FieldOutput, FieldSpec, ScoredCandidate, Page, PageContext, Section, WordBox
+from ..schemas import (
+    FieldOutput,
+    FieldSpec,
+    ScoredCandidate,
+    Page,
+    PageContext,
+    Section,
+    WordBox,
+)
 from .key_candidate_finder import KeyCandidateFinder
 from .value_candidate_finder import ValueCandidateFinder
 from .type_validator import TypeValidator
@@ -81,26 +89,42 @@ class ExtractionService:
         logger.info("Field '%s': %d key candidates.", field.key, len(key_candidates))
 
         for key_candidate in key_candidates:
-            value_candidates = self.value_candidate_finder.find(field, key_candidate, page_context)
+            value_candidates = self.value_candidate_finder.find(
+                field, key_candidate, page_context
+            )
             logger.debug(
                 "Field '%s' (key %s at %.1f,%.1f): %d value candidates.",
-                field.key, key_candidate.bbox.text, key_candidate.bbox.x0, key_candidate.bbox.top, len(value_candidates),
+                field.key,
+                key_candidate.bbox.text,
+                key_candidate.bbox.x0,
+                key_candidate.bbox.top,
+                len(value_candidates),
             )
 
             for value_candidate in value_candidates:
-                type_result = self.type_validator.validate(field.value_type, value_candidate.raw_text)
-                scored = self.scorer.evaluate(field, key_candidate, value_candidate, type_result)
+                type_result = self.type_validator.validate(
+                    field.value_type, value_candidate.raw_text
+                )
+                scored = self.scorer.evaluate(
+                    field, key_candidate, value_candidate, type_result
+                )
                 scored_candidates.append(scored)
                 logger.debug(
                     "Field '%s': value='%s' score=%.3f type_ok=%s, zone='%s'.",
-                    field.key, value_candidate.raw_text, scored.score_final, type_result.ok, value_candidate.zone,
+                    field.key,
+                    value_candidate.raw_text,
+                    scored.score_final,
+                    type_result.ok,
+                    value_candidate.zone,
                 )
 
         winner = self.conflict_resolver.pick_best(field, scored_candidates)
         if winner:
             return _winner_to_output(winner, page_number)
 
-        reason = "no_key_found" if not key_candidates else "no_candidate_above_threshold"
+        reason = (
+            "no_key_found" if not key_candidates else "no_candidate_above_threshold"
+        )
         return _missing_to_output(reason)
 
     def _extract_fields(
@@ -109,14 +133,18 @@ class ExtractionService:
         page: Page,
         sections: dict[SectionId, Section],
     ) -> dict[str, FieldOutput]:
-        full_ctx = PageContext(words=page.words, lines=page.lines, vertices=page.vertices)
+        full_ctx = PageContext(
+            words=page.words, lines=page.lines, vertices=page.vertices
+        )
         results: dict[str, FieldOutput] = {}
-        for field in fields: 
+        for field in fields:
             if field.section_id and field.section_id in sections:
                 section = sections[field.section_id]
-                ctx = PageContext(words=section.words, lines=page.lines, vertices=page.vertices)
+                ctx = PageContext(
+                    words=section.words, lines=page.lines, vertices=page.vertices
+                )
             else:
-                ctx = full_ctx 
+                ctx = full_ctx
             results[field.key] = self._extract_field(field, ctx, page.page_number)
 
         return results
@@ -142,7 +170,9 @@ class ExtractionService:
         logger.info("Parsed %d records.", len(records))
         return records
 
-    def extract_document(self, pdf: PdfHandle, profile: FiscalProfile) -> ExtractionOutput:
+    def extract_document(
+        self, pdf: PdfHandle, profile: FiscalProfile
+    ) -> ExtractionOutput:
         doc = pdf.parse()
 
         if doc.metadata and doc.metadata.status != DocumentStatus.OK:

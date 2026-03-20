@@ -51,6 +51,7 @@ class Edge:
             return abs(self.x1 - self.x0)
         return abs(self.y1 - self.y0)
 
+
 @dataclass(frozen=True, slots=True)
 class Vertex:
     """Immutable geometric vertex extracted from PDF drawings."""
@@ -62,6 +63,7 @@ class Vertex:
 @dataclass(frozen=True, slots=True)
 class PageContext:
     """Immutable snapshot of a page's spatial data for field extraction."""
+
     words: List[WordBox]
     lines: List[Edge]
     vertices: List[Vertex]
@@ -102,6 +104,7 @@ class Page:
     lines: List[Edge] = field(default_factory=list)
     vertices: List[Vertex] = field(default_factory=list)
     page_number: int = 1
+
 
 @dataclass(frozen=True, slots=True)
 class DocumentMetadata:

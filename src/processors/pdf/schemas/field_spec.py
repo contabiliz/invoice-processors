@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from ..enums import SectionId
 
+
 @dataclass(frozen=True)
 class FieldSpec:
     key: str

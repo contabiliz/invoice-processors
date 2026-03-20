@@ -6,7 +6,7 @@ import logging
 from typing import List, Optional, Union
 
 from ..specs import SectionId
-from ..schemas import Page, Section 
+from ..schemas import Page, Section
 from .geometry import filter_words_in_rect
 from .search import find_phrase_ngram
 
@@ -59,6 +59,13 @@ def slice_section(
         )
         return None
 
-    section = Section(section_id=section_id, label=label, x0=0.0, top=top, x1=page.width, bottom=bottom)
+    section = Section(
+        section_id=section_id,
+        label=label,
+        x0=0.0,
+        top=top,
+        x1=page.width,
+        bottom=bottom,
+    )
     section.words = filter_words_in_rect(page.words, section)
     return section

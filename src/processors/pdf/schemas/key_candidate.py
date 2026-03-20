@@ -1,6 +1,7 @@
 from ..schemas import WordBox
 from dataclasses import dataclass
 
+
 @dataclass(frozen=True)
 class KeyCandidate:
     key: str

@@ -56,15 +56,25 @@ class PyMuPDFAdapter:
     # ------------------------------------------------------------------
 
     def _h_contains_x(self, edge: Edge, x: float) -> bool:
-        return (min(edge.x0, edge.x1) - self._config.vertex_tolerance) <= x <= (max(edge.x0, edge.x1) + self._config.vertex_tolerance)
+        return (
+            (min(edge.x0, edge.x1) - self._config.vertex_tolerance)
+            <= x
+            <= (max(edge.x0, edge.x1) + self._config.vertex_tolerance)
+        )
 
     def _v_contains_y(self, edge: Edge, y: float) -> bool:
-        return (min(edge.y0, edge.y1) - self._config.vertex_tolerance) <= y <= (max(edge.y0, edge.y1) + self._config.vertex_tolerance)
+        return (
+            (min(edge.y0, edge.y1) - self._config.vertex_tolerance)
+            <= y
+            <= (max(edge.y0, edge.y1) + self._config.vertex_tolerance)
+        )
 
     def _compute_vertices(self, edges: List[Edge]) -> List[Vertex]:
         vertex_tolerance = self._config.vertex_tolerance
         min_edge_length = self._config.min_edge_length
-        h_edges = [e for e in edges if e.orientation == "h" and e.length >= min_edge_length]
+        h_edges = [
+            e for e in edges if e.orientation == "h" and e.length >= min_edge_length
+        ]
         v_edges = sorted(
             (e for e in edges if e.orientation == "v" and e.length >= min_edge_length),
             key=lambda e: e.x0,
@@ -82,7 +92,10 @@ class PyMuPDFAdapter:
 
             for v in v_edges[v_start:v_end]:
                 if self._h_contains_x(h, v.x0) and self._v_contains_y(v, h.y0):
-                    key = (round(v.x0 / vertex_tolerance), round(h.y0 / vertex_tolerance))
+                    key = (
+                        round(v.x0 / vertex_tolerance),
+                        round(h.y0 / vertex_tolerance),
+                    )
                     if key not in seen:
                         seen.add(key)
                         vertices.append(Vertex(x=v.x0, y=h.y0))
@@ -165,7 +178,10 @@ class PyMuPDFAdapter:
     def _from_rect(self, item: tuple, page_rect: fitz.Rect) -> list[Edge]:
         rect = item[1]
         ratio = self._config.full_page_ratio
-        if rect.width > page_rect.width * ratio and rect.height > page_rect.height * ratio:
+        if (
+            rect.width > page_rect.width * ratio
+            and rect.height > page_rect.height * ratio
+        ):
             return []
         return [
             Edge(x0=rect.x0, y0=rect.y0, x1=rect.x1, y1=rect.y0, orientation="h"),
