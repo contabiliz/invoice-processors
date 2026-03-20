@@ -13,3 +13,6 @@ dependencies = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/processors"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]

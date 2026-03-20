@@ -1,5 +1,4 @@
 import logging
-from pathlib import Path
 from dataclasses import dataclass
 
 from ..enums import DocumentStatus

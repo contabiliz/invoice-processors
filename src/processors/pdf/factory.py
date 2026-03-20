@@ -1,4 +1,4 @@
-from .adapters import PdfHandle, WordExtractionConfig
+from .adapters import PdfHandle
 from .profiles import FiscalProfile
 from .services import (
     ExtractionService,
@@ -9,7 +9,6 @@ from .services import (
     FieldScorer,
     ConflictResolver,
 )
-from .services.extraction import ExtractionOutput
 
 def create_extraction_service(pdf: PdfHandle, profile: FiscalProfile) -> ExtractionService:
     return ExtractionService(
