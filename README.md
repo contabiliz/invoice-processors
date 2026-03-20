@@ -11,7 +11,7 @@ Structured data extraction from Brazilian fiscal PDFs (DANFE NF-e modelo 55). Ex
 ## Installation
 
 ```bash
-pip install -e .
+uv pip install -e .
 ```
 
 ## Project structure
