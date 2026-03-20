@@ -8,7 +8,12 @@ import time
 from dataclasses import dataclass
 from pathlib import Path
 
-from workers.pdf import PdfHandle, WordExtractionConfig, DanfeNfe55Profile, create_extraction_service
+from processors.pdf import (
+    PdfHandle,
+    WordExtractionConfig,
+    DanfeNfe55Profile,
+    create_extraction_service,
+)
 
 try:
     from .drawer import draw_debug_pdf
@@ -82,7 +87,9 @@ def main(pdf_path: Path, flags: Flags) -> None:
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writeheader()
                 writer.writerows(output.records)
-            logger.info("Table CSV saved to %s (%d rows)", csv_path, len(output.records))
+            logger.info(
+                "Table CSV saved to %s (%d rows)", csv_path, len(output.records)
+            )
         else:
             logger.warning("No table records extracted — CSV not created.")
 
@@ -108,8 +115,12 @@ if __name__ == "__main__":
     try:
         pdf_path = Path(sys.argv[1])
     except IndexError:
-        print("Usage: python -m debug.pdf.debug <pdf_path> [--json] [--table] [--sections] [--edges] [--vertices]")
-        print("       Run from the project root with the package installed (pip install -e .)")
+        print(
+            "Usage: python -m debug.pdf.debug <pdf_path> [--json] [--table] [--sections] [--edges] [--vertices]"
+        )
+        print(
+            "       Run from the project root with the package installed (pip install -e .)"
+        )
         sys.exit(1)
 
     flags = Flags(

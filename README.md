@@ -1,4 +1,4 @@
-# invoice-workers
+# invoice-processors
 
 Structured data extraction from Brazilian fiscal PDFs (DANFE NF-e modelo 55). Extracts header fields (CNPJ, chave de acesso, valor total, data de emissão, etc.) and product/service table rows from documents with varying layouts.
 
@@ -17,7 +17,7 @@ pip install -e .
 ## Project structure
 
 ```
-├── src/workers/pdf/                  # Main extraction package
+├── src/processors/pdf/                  # Main extraction package
 │   ├── adapters/                     # PDF library wrappers
 │   │   ├── handle.py                 # PdfHandle — single entry-point composing both adapters
 │   │   ├── pdfplumber_adapter.py     # Text/word extraction, table cropping
@@ -147,7 +147,7 @@ debug/output/pdf_1/
 
 ## Adding a new field
 
-1. Add a `FieldSpec` entry to `src/workers/pdf/specs/fields_specs.py`:
+1. Add a `FieldSpec` entry to `src/processors/pdf/specs/fields_specs.py`:
 
 ```python
 FieldSpec(

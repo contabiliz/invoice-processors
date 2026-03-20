@@ -5,7 +5,7 @@ from pathlib import Path
 
 import fitz
 
-from workers.pdf import Column, Edge, Section, Vertex, WordBox
+from processors.pdf import Column, Edge, Section, Vertex, WordBox
 
 logger = logging.getLogger(__name__)
 
@@ -55,9 +55,7 @@ def _draw_sections(
     items = sections.values() if isinstance(sections, dict) else sections
     for section in items:
         rect = fitz.Rect(section.x0, section.top, section.x1, section.bottom)
-        page.draw_rect(
-            rect, color=(0, 0, 1), width=1, fill=(0, 0, 1), fill_opacity=0.1
-        )
+        page.draw_rect(rect, color=(0, 0, 1), width=1, fill=(0, 0, 1), fill_opacity=0.1)
         page.insert_text(
             (section.x1 - 200, section.top - 2),
             section.label,
