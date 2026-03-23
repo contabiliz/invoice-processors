@@ -38,7 +38,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - run: uv sync
+      - run: uv sync --extra dev
 
       - run: uvx ruff check
 
