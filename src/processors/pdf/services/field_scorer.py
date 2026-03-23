@@ -1,9 +1,9 @@
 import logging
+from invoice_models.validators import ValidationResult
 from ..schemas import (
     FieldSpec,
     KeyCandidate,
     ValueCandidate,
-    TypeValidationResult,
     ScoredCandidate,
     WordBox,
 )
@@ -39,7 +39,7 @@ def _distance_score(key: WordBox, value: WordBox) -> float:
     return max(0.0, 1.0 - gap / _MAX_GAP_PT)
 
 
-def _type_score(type_result: TypeValidationResult) -> float:
+def _type_score(type_result: ValidationResult) -> float:
     return 1.0 if type_result.ok else 0.0
 
 
@@ -54,7 +54,7 @@ class FieldScorer:
         field: FieldSpec,
         key: KeyCandidate,
         value: ValueCandidate,
-        type_result: TypeValidationResult,
+        type_result: ValidationResult,
     ) -> float:
         return self.evaluate(field, key, value, type_result).score_final
 
@@ -63,7 +63,7 @@ class FieldScorer:
         field: FieldSpec,
         key: KeyCandidate,
         value: ValueCandidate,
-        type_result: TypeValidationResult,
+        type_result: ValidationResult,
     ) -> ScoredCandidate:
         w_key, w_dist, w_type, w_cross = _FIELD_WEIGHTS.get(field.key, _DEFAULT_WEIGHTS)
 

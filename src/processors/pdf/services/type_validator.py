@@ -1,6 +1,6 @@
 import logging
-from ..schemas import TypeValidationResult
-from ..text.validators import (
+from invoice_models.validators import (
+    ValidationResult,
     validate_cnpj,
     validate_cpf_ou_cnpj,
     validate_texto_numerico_44,
@@ -24,13 +24,10 @@ _VALIDATORS = {
 
 
 class TypeValidator:
-    def validate(self, value_type: str, raw_text: str) -> TypeValidationResult:
+    def validate(self, value_type: str, raw_text: str) -> ValidationResult:
         validator = _VALIDATORS.get(value_type)
         if validator is None:
             logger.warning("Unknown value_type '%s', treating as texto.", value_type)
             validator = validate_texto
 
-        ok, normalized_value, reason = validator(raw_text)
-        return TypeValidationResult(
-            ok=ok, normalized_value=normalized_value, reason=reason
-        )
+        return validator(raw_text)

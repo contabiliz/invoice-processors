@@ -12,7 +12,7 @@ from .schemas import (
     FieldOutput,
     KeyCandidate,
     ValueCandidate,
-    TypeValidationResult,
+    ValidationResult,
     ScoredCandidate,
 )
 from .adapters import PdfHandle, WordExtractionConfig
@@ -33,7 +33,7 @@ __all__ = [
     "FieldOutput",
     "KeyCandidate",
     "ValueCandidate",
-    "TypeValidationResult",
+    "ValidationResult",
     "ScoredCandidate",
     "PdfHandle",
     "WordExtractionConfig",

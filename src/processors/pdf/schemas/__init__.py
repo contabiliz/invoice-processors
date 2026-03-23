@@ -13,5 +13,5 @@ from .field_spec import FieldSpec
 from .field_output import FieldOutput
 from .key_candidate import KeyCandidate
 from .value_candidate import ValueCandidate
-from .validation import TypeValidationResult
+from invoice_models.validators import ValidationResult
 from .scored_candidate import ScoredCandidate

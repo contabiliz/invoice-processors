@@ -13,7 +13,7 @@ from .pdf import (
     FieldOutput,
     KeyCandidate,
     ValueCandidate,
-    TypeValidationResult,
+    ValidationResult,
     ScoredCandidate,
     PdfHandle,
     WordExtractionConfig,
