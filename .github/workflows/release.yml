@@ -24,7 +24,9 @@ jobs:
           enable-cache: true
 
       - name: Configure git credentials
-        run: git config --global http.https://github.com/.extraheader "Authorization: Basic $(echo -n x-access-token:${{ secrets.GH_TOKEN }} | base64)"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: git config --global http.https://github.com/.extraheader "Authorization: Basic $(echo -n x-access-token:${GH_TOKEN} | base64)"
 
       - run: uv sync
 
