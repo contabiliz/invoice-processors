@@ -1,5 +1,4 @@
 name: CI
-
 on:
   pull_request:
     branches: [main]
@@ -10,15 +9,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Configure git credentials
+        run: |
+          git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
       - uses: astral-sh/setup-uv@v5
         with:
           enable-cache: true
 
-      - name: Configure git credentials
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: git config --global http.https://github.com/.extraheader "Authorization: Basic $(echo -n x-access-token:${GH_TOKEN} | base64)"
-
       - run: uv sync
-
       - run: uvx ruff check
