@@ -12,16 +12,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     concurrency: release
-
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: astral-sh/setup-uv@v5
-        with:
-          enable-cache: true
 
       - name: Generate GitHub App token
         id: app-token
@@ -33,18 +28,20 @@ jobs:
           repositories: "invoice-models,invoice-processors"
 
       - name: Configure git credentials
-        run: |
-          git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+        run: git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
-      - run: uv sync --extra dev
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
+      - run: uv sync --extra dev
       - run: uvx ruff check
 
       - name: Semantic release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv run semantic-release version
           uv run semantic-release publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

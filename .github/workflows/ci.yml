@@ -1,4 +1,5 @@
 name: CI
+
 on:
   pull_request:
     branches: [main]
@@ -19,8 +20,7 @@ jobs:
           repositories: "invoice-models,invoice-processors"
 
       - name: Configure git credentials
-        run: |
-          git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
+        run: git config --global url."https://x-access-token:${GH_TOKEN}@github.com/".insteadOf "https://github.com/"
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
