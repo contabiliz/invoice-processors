@@ -18,5 +18,14 @@ invoice-models = { git = "https://github.com/contabiliz/invoice-models.git", tag
 [tool.hatch.build.targets.wheel]
 packages = ["src/processors"]
 
+[project.optional-dependencies]
+dev = ["python-semantic-release"]
+
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+branch = "main"
+commit_parser = "conventional"
+tag_format = "v{version}"
+
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
