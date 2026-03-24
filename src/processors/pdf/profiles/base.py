@@ -5,11 +5,10 @@ from __future__ import annotations
 import logging
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields, replace
-from typing import List, Union
 
-from ..specs import SectionId, TableStrategy
 from ..schemas import FieldSpec, Page, Section
 from ..spatial import slice_section
+from ..specs import SectionId, TableStrategy
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +19,8 @@ class SectionRule:
 
     section_id: SectionId
     label: str
-    start_anchors: Union[str, List[str]]
-    end_anchors: Union[str, List[str], None] = None
+    start_anchors: str | list[str]
+    end_anchors: str | list[str] | None = None
 
 
 class FiscalProfile(ABC):
@@ -34,7 +33,7 @@ class FiscalProfile(ABC):
 
     @property
     @abstractmethod
-    def section_rules(self) -> List[SectionRule]:
+    def section_rules(self) -> list[SectionRule]:
         """Return the ordered list of section rules for this layout."""
 
     @property

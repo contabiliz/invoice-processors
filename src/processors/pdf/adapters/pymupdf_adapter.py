@@ -6,7 +6,6 @@ import logging
 from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
 
 import fitz
 
@@ -69,7 +68,7 @@ class PyMuPDFAdapter:
             <= (max(edge.y0, edge.y1) + self._config.vertex_tolerance)
         )
 
-    def _compute_vertices(self, edges: List[Edge]) -> List[Vertex]:
+    def _compute_vertices(self, edges: list[Edge]) -> list[Vertex]:
         vertex_tolerance = self._config.vertex_tolerance
         min_edge_length = self._config.min_edge_length
         h_edges = [

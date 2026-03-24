@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Literal
+from typing import Literal
 
 from ..enums import DocumentStatus, SectionId
 
@@ -64,9 +64,9 @@ class Vertex:
 class PageContext:
     """Immutable snapshot of a page's spatial data for field extraction."""
 
-    words: List[WordBox]
-    lines: List[Edge]
-    vertices: List[Vertex]
+    words: list[WordBox]
+    lines: list[Edge]
+    vertices: list[Vertex]
 
 
 @dataclass
@@ -79,7 +79,7 @@ class Section:
     top: float
     x1: float
     bottom: float
-    words: List[WordBox] = field(default_factory=list)
+    words: list[WordBox] = field(default_factory=list)
 
 
 @dataclass
@@ -91,7 +91,7 @@ class Column:
     top: float
     x1: float
     bottom: float
-    words: List[WordBox] = field(default_factory=list)
+    words: list[WordBox] = field(default_factory=list)
 
 
 @dataclass
@@ -100,9 +100,9 @@ class Page:
 
     width: float
     height: float
-    words: List[WordBox] = field(default_factory=list)
-    lines: List[Edge] = field(default_factory=list)
-    vertices: List[Vertex] = field(default_factory=list)
+    words: list[WordBox] = field(default_factory=list)
+    lines: list[Edge] = field(default_factory=list)
+    vertices: list[Vertex] = field(default_factory=list)
     page_number: int = 1
 
 
@@ -119,7 +119,7 @@ class DocumentMetadata:
 class Document:
     """Aggregates multiple pages."""
 
-    pages: List[Page] = field(default_factory=list)
+    pages: list[Page] = field(default_factory=list)
     metadata: DocumentMetadata | None = None
 
     @property

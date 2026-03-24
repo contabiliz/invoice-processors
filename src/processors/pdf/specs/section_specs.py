@@ -4,7 +4,6 @@ from typing import Final
 
 from ..enums import SectionId
 
-
 SECTION_LABELS: Final[dict[SectionId, str]] = {
     SectionId.DESTINATARIO_REMETENTE: "DESTINATÁRIO / REMETENTE",
     SectionId.HEADER: "CABEÇALHO",

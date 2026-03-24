@@ -1,5 +1,6 @@
-from ..schemas import WordBox
 from dataclasses import dataclass
+
+from ..schemas import WordBox
 
 
 @dataclass(frozen=True)

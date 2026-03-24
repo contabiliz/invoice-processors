@@ -1,11 +1,11 @@
-from .extraction import ExtractionService
-from .table_items_extractor import (
-    TableItemsExtractor,
-    TableExtractionResult,
-    TableExtractionCandidate,
-)
-from .key_candidate_finder import KeyCandidateFinder
-from .value_candidate_finder import ValueCandidateFinder
-from .type_validator import TypeValidator
-from .field_scorer import FieldScorer
 from .conflict_resolver import ConflictResolver
+from .extraction import ExtractionService
+from .field_scorer import FieldScorer
+from .key_candidate_finder import KeyCandidateFinder
+from .table_items_extractor import (
+    TableExtractionCandidate,
+    TableExtractionResult,
+    TableItemsExtractor,
+)
+from .type_validator import TypeValidator
+from .value_candidate_finder import ValueCandidateFinder

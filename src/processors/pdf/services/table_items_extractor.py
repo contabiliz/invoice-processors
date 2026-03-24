@@ -1,11 +1,11 @@
 import logging
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Callable
 
 from ..adapters import PdfHandle
-from ..specs import TableStrategy, DEFAULT_STRATEGIES
-from ..table import score_table, TableScore
 from ..schemas import Section
+from ..specs import DEFAULT_STRATEGIES, TableStrategy
+from ..table import TableScore, score_table
 
 logger = logging.getLogger(__name__)
 

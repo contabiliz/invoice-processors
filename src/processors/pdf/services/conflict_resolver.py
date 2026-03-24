@@ -1,4 +1,5 @@
 import logging
+
 from ..schemas import FieldSpec, ScoredCandidate
 
 logger = logging.getLogger(__name__)

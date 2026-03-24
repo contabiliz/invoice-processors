@@ -148,7 +148,7 @@ def parse_table(
         for row in tables[rows_table_index][rows_data_index:]
     ]
     records: list[dict[str, str | None]] = [
-        dict(zip(str_columns, row)) for row in content
+        dict(zip(str_columns, row, strict=True)) for row in content
     ]
 
     return records

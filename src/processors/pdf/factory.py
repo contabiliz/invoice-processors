@@ -1,11 +1,11 @@
 from .services import (
+    ConflictResolver,
     ExtractionService,
+    FieldScorer,
     KeyCandidateFinder,
     TableItemsExtractor,
-    ValueCandidateFinder,
     TypeValidator,
-    FieldScorer,
-    ConflictResolver,
+    ValueCandidateFinder,
 )
 
 

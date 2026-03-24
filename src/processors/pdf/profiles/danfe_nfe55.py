@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
-from typing import List
-
-from ..specs import TableStrategy, DEFAULT_STRATEGIES
-from ..specs import END_ANCHORS, SECTION_LABELS, START_ANCHORS, SectionId
+from ..specs import (
+    DEFAULT_STRATEGIES,
+    END_ANCHORS,
+    SECTION_LABELS,
+    START_ANCHORS,
+    SectionId,
+    TableStrategy,
+)
 from .base import FiscalProfile, SectionRule
 
 _SECTION_ORDER: tuple[SectionId, ...] = (
@@ -38,7 +42,7 @@ class DanfeNfe55Profile(FiscalProfile):
         }
 
     @property
-    def section_rules(self) -> List[SectionRule]:
+    def section_rules(self) -> list[SectionRule]:
         return [
             SectionRule(
                 section_id=section_id,

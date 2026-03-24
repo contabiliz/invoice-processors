@@ -1,13 +1,14 @@
 import logging
+
 from invoice_models.validators import (
     ValidationResult,
     validate_cnpj,
     validate_cpf_ou_cnpj,
-    validate_texto_numerico_44,
-    validate_moeda_brl,
     validate_data,
-    validate_uf,
+    validate_moeda_brl,
     validate_texto,
+    validate_texto_numerico_44,
+    validate_uf,
 )
 
 logger = logging.getLogger(__name__)

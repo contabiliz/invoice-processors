@@ -1,9 +1,10 @@
 import logging
+
 from ..schemas import (
     FieldSpec,
     KeyCandidate,
-    ValueCandidate,
     PageContext,
+    ValueCandidate,
     Vertex,
     WordBox,
 )
@@ -17,15 +18,25 @@ _VERTEX_TOL = 5.0
 
 
 def _merge_boxes(words: list[WordBox], zone: str) -> ValueCandidate:
+    parts: list[str] = []
+    x0 = x1 = top = bottom = 0.0
+    for i, w in enumerate(words):
+        parts.append(w.text)
+        if i == 0:
+            x0, x1, top, bottom = w.x0, w.x1, w.top, w.bottom
+        else:
+            if w.x0 < x0:
+                x0 = w.x0
+            if w.x1 > x1:
+                x1 = w.x1
+            if w.top < top:
+                top = w.top
+            if w.bottom > bottom:
+                bottom = w.bottom
+    text = " ".join(parts)
     return ValueCandidate(
-        raw_text=" ".join(w.text for w in words),
-        bbox=WordBox(
-            text=" ".join(w.text for w in words),
-            x0=min(w.x0 for w in words),
-            top=min(w.top for w in words),
-            x1=max(w.x1 for w in words),
-            bottom=max(w.bottom for w in words),
-        ),
+        raw_text=text,
+        bbox=WordBox(text=text, x0=x0, x1=x1, top=top, bottom=bottom),
         zone=zone,
     )
 

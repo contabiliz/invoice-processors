@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+
+from invoice_models.validators import ValidationResult
+
 from .key_candidate import KeyCandidate
 from .value_candidate import ValueCandidate
-from invoice_models.validators import ValidationResult
 
 
 @dataclass(frozen=True)

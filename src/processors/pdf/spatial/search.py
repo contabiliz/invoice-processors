@@ -1,7 +1,7 @@
 import logging
 
-from ..text import normalize
 from ..schemas import WordBox
+from ..text import normalize
 
 logger = logging.getLogger(__name__)
 
@@ -34,18 +34,14 @@ def _validate_phrase_window(window: list[WordBox], tokens: list[str]) -> bool:
     if len(window) != len(tokens):
         return False
 
-    if not all(normalize(w.text) == token for w, token in zip(window, tokens)):
+    if not all(normalize(w.text) == token for w, token in zip(window, tokens, strict=True)):
         return False
 
     y_coords = [w.top for w in window]
     if max(y_coords) - min(y_coords) > MAX_Y_DRIFT:
         return False
 
-    for curr, nxt in zip(window, window[1:]):
-        if nxt.x0 - curr.x1 > MAX_X_GAP:
-            return False
-
-    return True
+    return all(nxt.x0 - curr.x1 <= MAX_X_GAP for curr, nxt in zip(window, window[1:], strict=False))
 
 
 def _merge_word_boxes(window: list[WordBox]) -> WordBox:
@@ -53,13 +49,22 @@ def _merge_word_boxes(window: list[WordBox]) -> WordBox:
     if not window:
         raise ValueError("Cannot merge an empty window")
 
-    return WordBox(
-        text=" ".join(w.text for w in window),
-        x0=min(w.x0 for w in window),  # Pega o limite mais à esquerda
-        x1=max(w.x1 for w in window),  # Pega o limite mais à direita
-        top=min(w.top for w in window),  # Pega o teto mais alto
-        bottom=max(w.bottom for w in window),  # Pega o chão mais baixo
-    )
+    parts: list[str] = []
+    x0 = x1 = top = bottom = 0.0
+    for i, w in enumerate(window):
+        parts.append(w.text)
+        if i == 0:
+            x0, x1, top, bottom = w.x0, w.x1, w.top, w.bottom
+        else:
+            if w.x0 < x0:
+                x0 = w.x0
+            if w.x1 > x1:
+                x1 = w.x1
+            if w.top < top:
+                top = w.top
+            if w.bottom > bottom:
+                bottom = w.bottom
+    return WordBox(text=" ".join(parts), x0=x0, x1=x1, top=top, bottom=bottom)
 
 
 def find_phrase_line(phrases: str | list[str], boxes: list[WordBox]) -> list[WordBox]:

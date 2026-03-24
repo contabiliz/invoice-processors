@@ -46,12 +46,14 @@ def _header_score(first_row: list[str | None]) -> float:
     if not non_null:
         return 0.0
 
-    filled = sum(1 for c in non_null if c.strip())
+    filled = coherent = 0
+    for c in non_null:
+        s = c.strip()
+        if s:
+            filled += 1
+            if len(s.split()) <= _MAX_HEADER_CELL_WORDS:
+                coherent += 1
     fill_ratio = filled / len(non_null)
-
-    coherent = sum(
-        1 for c in non_null if c.strip() and len(c.split()) <= _MAX_HEADER_CELL_WORDS
-    )
     coherence = coherent / len(non_null)
 
     return fill_ratio * coherence
@@ -98,10 +100,7 @@ def _flatten_tables(
 
     first_row = tables[0][0]
 
-    if len(tables) > 1:
-        data_rows = [row for t in tables[1:] for row in t]
-    else:
-        data_rows = tables[0][1:]
+    data_rows = [row for t in tables[1:] for row in t] if len(tables) > 1 else tables[0][1:]
 
     return first_row, data_rows
 

@@ -1,10 +1,12 @@
 import logging
+
 from invoice_models.validators import ValidationResult
+
 from ..schemas import (
     FieldSpec,
     KeyCandidate,
-    ValueCandidate,
     ScoredCandidate,
+    ValueCandidate,
     WordBox,
 )
 

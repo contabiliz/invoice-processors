@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import List, Optional, Union
 
-from ..specs import SectionId
 from ..schemas import Page, Section
+from ..specs import SectionId
 from .geometry import filter_words_in_rect
 from .search import find_phrase_ngram
 
@@ -17,9 +16,9 @@ def slice_section(
     page: Page,
     section_id: SectionId,
     label: str,
-    start_phrases: Union[str, List[str]],
-    end_phrases: Union[str, List[str]] = None,
-) -> Optional[Section]:
+    start_phrases: str | list[str],
+    end_phrases: str | list[str] = None,
+) -> Section | None:
     """Slice a Section from *page* using anchor phrases for vertical bounds."""
     start_matches = find_phrase_ngram(start_phrases, page.words)
     start_anchor = min(start_matches, key=lambda w: w.top) if start_matches else None

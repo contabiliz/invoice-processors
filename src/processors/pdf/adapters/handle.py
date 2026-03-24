@@ -7,9 +7,9 @@ import time
 from pathlib import Path
 from typing import Any
 
-from .pdfplumber_adapter import WordExtractionConfig, PdfPlumberAdapter
-from .pymupdf_adapter import EdgeExtractionConfig, PyMuPDFAdapter
 from ..schemas import Document, Section
+from .pdfplumber_adapter import PdfPlumberAdapter, WordExtractionConfig
+from .pymupdf_adapter import EdgeExtractionConfig, PyMuPDFAdapter
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
-from .pymupdf_adapter import EdgeExtractionConfig, PyMuPDFAdapter
-from .pdfplumber_adapter import WordExtractionConfig, PdfPlumberAdapter
 from .handle import PdfHandle
+from .pdfplumber_adapter import PdfPlumberAdapter, WordExtractionConfig
+from .pymupdf_adapter import EdgeExtractionConfig, PyMuPDFAdapter
 
 __all__ = [
     "EdgeExtractionConfig",

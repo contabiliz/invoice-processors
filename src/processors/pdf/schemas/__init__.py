@@ -1,17 +1,18 @@
+from invoice_models.validators import ValidationResult
+
 from .document import (
+    Column,
     Document,
     DocumentMetadata,
+    Edge,
     Page,
     PageContext,
     Section,
-    Column,
-    WordBox,
-    Edge,
     Vertex,
+    WordBox,
 )
-from .field_spec import FieldSpec
 from .field_output import FieldOutput
+from .field_spec import FieldSpec
 from .key_candidate import KeyCandidate
-from .value_candidate import ValueCandidate
-from invoice_models.validators import ValidationResult
 from .scored_candidate import ScoredCandidate
+from .value_candidate import ValueCandidate

@@ -1,26 +1,26 @@
 import logging
 from dataclasses import dataclass
 
+from ..adapters import PdfHandle
 from ..enums import DocumentStatus
+from ..profiles.base import FiscalProfile
 from ..schemas import (
     FieldOutput,
     FieldSpec,
-    ScoredCandidate,
     Page,
     PageContext,
+    ScoredCandidate,
     Section,
     WordBox,
 )
-from .key_candidate_finder import KeyCandidateFinder
-from .value_candidate_finder import ValueCandidateFinder
-from .type_validator import TypeValidator
-from .table_items_extractor import TableItemsExtractor
-from .field_scorer import FieldScorer
-from .conflict_resolver import ConflictResolver
-from ..adapters import PdfHandle
-from ..profiles.base import FiscalProfile
 from ..specs import FIELD_SPECS, SectionId
 from ..table import parse_table
+from .conflict_resolver import ConflictResolver
+from .field_scorer import FieldScorer
+from .key_candidate_finder import KeyCandidateFinder
+from .table_items_extractor import TableItemsExtractor
+from .type_validator import TypeValidator
+from .value_candidate_finder import ValueCandidateFinder
 
 logger = logging.getLogger(__name__)
 
