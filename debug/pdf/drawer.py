@@ -5,7 +5,8 @@ from pathlib import Path
 
 import fitz
 
-from processors.pdf import Column, Edge, Section, Vertex, WordBox
+from processors.pdf.enums import SectionId
+from processors.pdf.schemas import Column, Edge, Section, Vertex, WordBox
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ def draw_debug_pdf(
     input_path: Path,
     output_path: Path,
     page_index: int = 0,
-    sections: list[Section] | dict[str, Section] | None = None,
+    sections: list[Section] | dict[SectionId, Section] | None = None,
     anchors: list[WordBox] | None = None,
     columns: list[Column] | dict[str, Column] | None = None,
     edges: list[Edge] | None = None,
@@ -50,7 +51,7 @@ def draw_debug_pdf(
 
 def _draw_sections(
     page: fitz.Page,
-    sections: list[Section] | dict[str, Section],
+    sections: list[Section] | dict[SectionId, Section],
 ) -> None:
     items = sections.values() if isinstance(sections, dict) else sections
     for section in items:
