@@ -71,12 +71,12 @@ class ExtractionService:
         scorer: FieldScorer,
         conflict_resolver: ConflictResolver,
     ):
-        self.key_candidate_finder = key_candidate_finder
-        self.value_candidate_finder = value_candidate_finder
-        self.type_validator = type_validator
-        self.table_items_extractor = table_items_extractor
-        self.scorer = scorer
-        self.conflict_resolver = conflict_resolver
+        self.key_candidate_finder: KeyCandidateFinder = key_candidate_finder
+        self.value_candidate_finder: ValueCandidateFinder = value_candidate_finder
+        self.type_validator: TypeValidator = type_validator
+        self.table_items_extractor: TableItemsExtractor = table_items_extractor
+        self.scorer: FieldScorer = scorer
+        self.conflict_resolver: ConflictResolver = conflict_resolver
 
     def _extract_field(
         self,
@@ -201,6 +201,8 @@ class ExtractionService:
             table_section=sections[profile.table_section_id],
             profile=profile,
         )
+
+        logger.info("Records: %s", records)
 
         return ExtractionOutput(
             sections=sections,

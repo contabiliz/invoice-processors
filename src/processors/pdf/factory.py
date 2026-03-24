@@ -1,5 +1,3 @@
-from .adapters import PdfHandle
-from .profiles import FiscalProfile
 from .services import (
     ExtractionService,
     KeyCandidateFinder,
@@ -11,9 +9,7 @@ from .services import (
 )
 
 
-def create_extraction_service(
-    pdf: PdfHandle, profile: FiscalProfile
-) -> ExtractionService:
+def create_extraction_service() -> ExtractionService:
     return ExtractionService(
         key_candidate_finder=KeyCandidateFinder(),
         value_candidate_finder=ValueCandidateFinder(),
