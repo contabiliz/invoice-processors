@@ -6,7 +6,7 @@ from invoice_models.validators import (
     validate_texto_numerico_44,
     validate_moeda_brl,
     validate_data,
-    validate_cidade_uf,
+    validate_uf,
     validate_texto,
 )
 
@@ -18,7 +18,7 @@ _VALIDATORS = {
     "texto_numerico_44": validate_texto_numerico_44,
     "moeda_brl": validate_moeda_brl,
     "data": validate_data,
-    "cidade_uf": validate_cidade_uf,
+    "uf": validate_uf,
     "texto": validate_texto,
 }
 

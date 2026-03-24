@@ -20,7 +20,7 @@ _FIELD_WEIGHTS: dict[str, tuple[float, float, float, float]] = {
     "data_emissao": (0.30, 0.20, 0.35, 0.15),
     "numero_documento": (0.30, 0.20, 0.35, 0.15),
     "nome_destinatario": (0.40, 0.30, 0.20, 0.10),
-    "endereco_destinatario_cidade_uf": (0.35, 0.30, 0.25, 0.10),
+    "uf_destinatario": (0.35, 0.30, 0.25, 0.10),
 }
 _DEFAULT_WEIGHTS = (0.30, 0.20, 0.35, 0.15)
 

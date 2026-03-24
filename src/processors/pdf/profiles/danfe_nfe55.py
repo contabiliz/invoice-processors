@@ -32,6 +32,7 @@ class DanfeNfe55Profile(FiscalProfile):
         return {
             "cnpj_emitente": {"section_id": SectionId.HEADER},
             "nome_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
+            "uf_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
             "documento_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
             "valor_total_nota": {"section_id": SectionId.CALCULO_IMPOSTO},
         }
