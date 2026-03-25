@@ -17,7 +17,7 @@ def slice_section(
     section_id: SectionId,
     label: str,
     start_phrases: str | list[str],
-    end_phrases: str | list[str] = None,
+    end_phrases: str | list[str] | None = None,
 ) -> Section | None:
     """Slice a Section from *page* using anchor phrases for vertical bounds."""
     start_matches = find_phrase_ngram(start_phrases, page.words)

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from pathlib import Path
+from collections.abc import Sequence
 
 logger = logging.getLogger(__name__)
 
@@ -63,9 +63,7 @@ def _resolve_embedded_spans(
     return resolved_h, resolved_s
 
 
-def _merge_double_header(
-    headers: list[str | None], second_row: list[str | None]
-) -> list[str]:
+def _merge_double_header(headers: list[str | None], second_row: list[str | None]) -> list[str]:
     """Combine a double-line header into a single row.
 
     First resolves embedded spanning text, then merges the sub-header
@@ -112,8 +110,6 @@ def _normalize_row(row: list[str | None], expected_len: int) -> list[str | None]
 
 def parse_table(
     tables: list[list[list[str | None]]],
-    *,
-    debug_csv: Path | None = None,
 ) -> list[dict[str, str | None]]:
     """Parse raw pdfplumber tables into a flat list of dicts.
 
@@ -126,7 +122,7 @@ def parse_table(
     rows_table_index = 0
     rows_data_index = 1
 
-    columns: list[str | None] = tables[0][0] if tables[0] else []
+    columns: Sequence[str | None] = tables[0][0] if tables[0] else []
     second_row: list[str | None] = tables[0][1] if len(tables[0]) > 1 else []
 
     if len(tables) > 1:
@@ -143,10 +139,7 @@ def parse_table(
     str_columns = [(c or "").replace("\n", " ").strip() for c in columns]
 
     col_count = len(str_columns)
-    content = [
-        _normalize_row(row, col_count)
-        for row in tables[rows_table_index][rows_data_index:]
-    ]
+    content = [_normalize_row(row, col_count) for row in tables[rows_table_index][rows_data_index:]]
     records: list[dict[str, str | None]] = [
         dict(zip(str_columns, row, strict=True)) for row in content
     ]

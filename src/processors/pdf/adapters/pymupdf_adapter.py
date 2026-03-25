@@ -6,6 +6,7 @@ import logging
 from bisect import bisect_left, bisect_right
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import fitz
 
@@ -39,7 +40,7 @@ class PyMuPDFAdapter:
         doc = fitz.open(self._path)
         try:
             result: dict[int, tuple[list[Edge], list[Vertex]]] = {}
-            for i, page in enumerate(doc, start=1):
+            for i, page in enumerate(doc, start=1):  # type: ignore[arg-type]
                 drawings = page.get_drawings()
                 edges = self._normalize(drawings, page.rect)
                 vertices = self._compute_vertices(edges)
@@ -71,9 +72,7 @@ class PyMuPDFAdapter:
     def _compute_vertices(self, edges: list[Edge]) -> list[Vertex]:
         vertex_tolerance = self._config.vertex_tolerance
         min_edge_length = self._config.min_edge_length
-        h_edges = [
-            e for e in edges if e.orientation == "h" and e.length >= min_edge_length
-        ]
+        h_edges = [e for e in edges if e.orientation == "h" and e.length >= min_edge_length]
         v_edges = sorted(
             (e for e in edges if e.orientation == "v" and e.length >= min_edge_length),
             key=lambda e: e.x0,
@@ -143,7 +142,7 @@ class PyMuPDFAdapter:
         y0: float,
         x1: float,
         y1: float,
-    ) -> str | None:
+    ) -> Literal["h", "v"] | None:
         threshold = self._config.orientation_threshold
         if abs(y1 - y0) < threshold:
             return "h"
@@ -177,10 +176,7 @@ class PyMuPDFAdapter:
     def _from_rect(self, item: tuple, page_rect: fitz.Rect) -> list[Edge]:
         rect = item[1]
         ratio = self._config.full_page_ratio
-        if (
-            rect.width > page_rect.width * ratio
-            and rect.height > page_rect.height * ratio
-        ):
+        if rect.width > page_rect.width * ratio and rect.height > page_rect.height * ratio:
             return []
         return [
             Edge(x0=rect.x0, y0=rect.y0, x1=rect.x1, y1=rect.y0, orientation="h"),

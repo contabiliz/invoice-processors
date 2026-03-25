@@ -40,7 +40,7 @@ class PdfPlumberAdapter:
         word_extraction_config: WordExtractionConfig | None = None,
     ) -> None:
         self._path: Path = Path(path)
-        self._pdf: pdfplumber.PDF | None = None
+        self._pdf: pdfplumber.pdf.PDF | None = None
         self._word_extraction_config: WordExtractionConfig = (
             word_extraction_config or WordExtractionConfig()
         )
@@ -58,7 +58,7 @@ class PdfPlumberAdapter:
             self._pdf.close()
             self._pdf = None
 
-    def _require_open(self) -> pdfplumber.PDF:
+    def _require_open(self) -> pdfplumber.pdf.PDF:
         if self._pdf is None:
             raise RuntimeError(
                 "PdfPlumberAdapter must be used as a context manager (with ... as handle:)"
@@ -134,9 +134,7 @@ class PdfPlumberAdapter:
         settings = table_settings or {}
 
         if page_index >= len(pdf.pages):
-            logger.error(
-                "Page %d does not exist (total: %d).", page_index, len(pdf.pages)
-            )
+            logger.error("Page %d does not exist (total: %d).", page_index, len(pdf.pages))
             return None
 
         cropped = pdf.pages[page_index].crop(bbox)
