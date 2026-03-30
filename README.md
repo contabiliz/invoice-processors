@@ -1,12 +1,16 @@
 # invoice-processors
 
-Structured data extraction from Brazilian fiscal PDFs (DANFE NF-e modelo 55). Extracts header fields (CNPJ, chave de acesso, valor total, data de emissão, etc.) and product/service table rows from documents with varying layouts.
+Structured data extraction from Brazilian fiscal documents (NF-e modelo 55). Supports two processor branches:
+
+- **XML** — deterministic extraction from NF-e XML files (SEFAZ schema): XSD validation + XPath field mapping, no AI.
+- **PDF** — spatial extraction from DANFE PDFs: geometric edge/vertex analysis + weighted candidate scoring.
 
 ## Requirements
 
-- Python >= 3.11
-- [pdfplumber](https://github.com/jsvine/pdfplumber) — word extraction and table detection
-- [PyMuPDF (fitz)](https://pymupdf.readthedocs.io/) — geometric edge/vertex extraction from vector drawings
+- Python >= 3.12
+- [lxml](https://lxml.de/) — secure XML parsing and XSD validation (XML processor)
+- [pdfplumber](https://github.com/jsvine/pdfplumber) — word extraction and table detection (PDF processor)
+- [PyMuPDF (fitz)](https://pymupdf.readthedocs.io/) — geometric edge/vertex extraction from vector drawings (PDF processor)
 
 ## Installation
 
@@ -17,7 +21,17 @@ uv pip install -e .
 ## Project structure
 
 ```
-├── src/processors/pdf/                  # Main extraction package
+├── src/processors/
+│   ├── xml/                             # XML processor
+│   │   ├── parser.py                    # Secure lxml parser + XSD validation
+│   │   ├── extractor.py                 # XPath field extraction → NfeXmlResult
+│   │   ├── process.py                   # Public API: process(bytes) → ProcessorResult
+│   │   └── schemas/                     # Bundled SEFAZ XSD files (v4.00)
+│   │       ├── nfe_v4.00.xsd            # Root schema for <NFe> documents
+│   │       ├── nfeProc_v4.00.xsd        # Root schema for <nfeProc> documents (authorized)
+│   │       └── leiauteNFe_v4.00.xsd     # Full NF-e layout definitions (included by above)
+│   │
+│   └── pdf/                             # PDF processor
 │   ├── adapters/                     # PDF library wrappers
 │   │   ├── handle.py                 # PdfHandle — single entry-point composing both adapters
 │   │   ├── pdfplumber_adapter.py     # Text/word extraction, table cropping
@@ -58,7 +72,75 @@ uv pip install -e .
 └── README.md
 ```
 
-## Extraction pipeline
+## XML processor
+
+### Pipeline
+
+```
+bytes
+  │
+  ▼
+Magic byte check (must start with <?xml)
+  │ fail → terminal failure
+  ▼
+lxml.etree.fromstring() with SECURE_PARSER
+  │ XMLSyntaxError → terminal failure
+  ▼
+Detect root element (NFe or nfeProc) + read versao attribute
+  │ unsupported → terminal failure
+  ▼
+XSD validation (nfe_v4.00.xsd or nfeProc_v4.00.xsd)
+  │ invalid → terminal failure
+  ▼
+XPath extraction (header fields + line items)
+  │
+  ▼
+NfeXmlResult (Pydantic validators handle CNPJ, CPF, chave de acesso, date)
+```
+
+Both `<NFe>` (raw) and `<nfeProc>` (SEFAZ-authorized, with `<protNFe>`) are supported. All failures are terminal — no retries.
+
+### Security
+
+All four lxml parser flags are mandatory (ADR-004):
+
+| Flag | Protection |
+|---|---|
+| `resolve_entities=False` | XXE injection |
+| `no_network=True` | SSRF via external DTD/entity |
+| `huge_tree=False` | XML bomb / stack exhaustion |
+| `load_dtd=False` | DTD loading (NF-e has no DTDs) |
+
+### Extracted fields
+
+| Field | XPath |
+|---|---|
+| `chave_acesso` | `//nfe:infProt/nfe:chNFe` |
+| `cnpj_emitente` | `//nfe:emit/nfe:CNPJ` |
+| `nome_emitente` | `//nfe:emit/nfe:xNome` |
+| `documento_destinatario` | `//nfe:dest/nfe:CNPJ` or `//nfe:dest/nfe:CPF` |
+| `nome_destinatario` | `//nfe:dest/nfe:xNome` |
+| `data_emissao` | `//nfe:ide/nfe:dhEmi` |
+| `valor_total_nota` | `//nfe:total/nfe:ICMSTot/nfe:vNF` |
+| `numero_nota` | `//nfe:ide/nfe:nNF` |
+| `serie` | `//nfe:ide/nfe:serie` |
+
+Line items extracted from each `<det>` element: `numero_item`, `codigo_produto`, `descricao`, `quantidade`, `unidade`, `valor_unitario`, `valor_total_item`, `ncm`, `cfop`.
+
+### Debug tooling
+
+```bash
+python -m debug.xml.debug <xml_path> [--json] [--table]
+```
+
+| Flag | Output |
+|---|---|
+| `--json` | `debug/output/xml_{stem}/{stem}_fields.json` — full `NfeXmlResult` dump |
+| `--table` | `debug/output/xml_{stem}/{stem}_items.csv` — one row per line item |
+
+---
+
+## PDF extraction pipeline
 
 ```
 PDF file
@@ -90,9 +172,9 @@ Table extraction:
 ExtractionOutput { sections, fields, records }
 ```
 
-## Debug tooling
+## PDF debug tooling
 
-The `debug/` directory at the project root contains a CLI tool for inspecting extraction results visually. Requires the package installed in editable mode (`pip install -e .`).
+The `debug/pdf/` directory contains a CLI tool for inspecting PDF extraction results visually. Requires the package installed in editable mode (`pip install -e .`).
 
 ### Usage
 
