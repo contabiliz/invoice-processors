@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from ..enums import SearchZone
 from ..schemas import WordBox
 
 
@@ -7,4 +8,4 @@ from ..schemas import WordBox
 class ValueCandidate:
     raw_text: str
     bbox: WordBox
-    zone: str
+    zone: SearchZone

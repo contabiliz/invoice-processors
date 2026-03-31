@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from ..enums import ExtractionMethod
 from ..schemas import WordBox
 
 
@@ -7,5 +8,5 @@ from ..schemas import WordBox
 class KeyCandidate:
     key: str
     confidence: float
-    method: str
+    method: ExtractionMethod
     bbox: WordBox
