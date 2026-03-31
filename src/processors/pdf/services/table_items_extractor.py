@@ -6,10 +6,9 @@ from ..adapters import PdfHandle
 from ..schemas import Section
 from ..specs import DEFAULT_STRATEGIES, TableStrategy
 from ..table import TableScore, score_table
+from ..types import RawTables
 
 logger = logging.getLogger(__name__)
-
-RawTables = list[list[list[str | None]]]
 
 
 @dataclass
@@ -33,9 +32,11 @@ class TableItemsExtractor:
         handle: PdfHandle,
         region: Section,
         page_index: int = 0,
-        strategies: list[TableStrategy] = DEFAULT_STRATEGIES,
+        strategies: list[TableStrategy] | None = None,
         scorer: Callable[[RawTables | None, str], TableScore] = score_table,
     ) -> TableExtractionResult:
+        if strategies is None:
+            strategies = DEFAULT_STRATEGIES
         """Try every strategy, score each result, return the best one."""
         ordered = sorted(strategies, key=lambda s: s.priority)
 
