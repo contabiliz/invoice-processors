@@ -10,12 +10,10 @@ from .adapters import PdfHandle
 from .enums import DocumentStatus
 from .factory import create_extraction_service
 from .profiles import DanfeNfe55Profile
+from .profiles.base import FiscalProfile
 from .schemas import FieldOutput as InternalFieldOutput
 from .services.extraction import ExtractionOutput, ExtractionService
 from .specs.column_specs import HEADER_TO_FIELD, normalize_header
-
-_service: ExtractionService = create_extraction_service()
-_profile: DanfeNfe55Profile = DanfeNfe55Profile()
 
 
 def _to_decimal(value: str | None) -> Decimal | None:
@@ -78,12 +76,22 @@ def _map_output(output: ExtractionOutput) -> PdfExtractionResult:
     )
 
 
-def process(content: bytes) -> ProcessorResult:
+def process(
+    content: bytes,
+    *,
+    service: ExtractionService | None = None,
+    profile: FiscalProfile | None = None,
+) -> ProcessorResult:
+    if service is None:
+        service = create_extraction_service()
+    if profile is None:
+        profile = DanfeNfe55Profile()
+
     with tempfile.NamedTemporaryFile(suffix=".pdf", delete=True) as tmp:
         tmp.write(content)
         tmp.flush()
         with PdfHandle(Path(tmp.name)) as pdf:
-            output = _service.extract_document(pdf, _profile)
+            output = service.extract_document(pdf, profile)
 
     if output.status == DocumentStatus.INSUFFICIENT_DATA:
         return ProcessorResult(result=None, routing_override=RoutingOverride.IMAGE)
