@@ -8,12 +8,11 @@ from pathlib import Path
 from typing import Any
 
 from ..schemas import Document, Section
+from ..types import RawTables
 from .pdfplumber_adapter import PdfPlumberAdapter, WordExtractionConfig
 from .pymupdf_adapter import EdgeExtractionConfig, PyMuPDFAdapter
 
 logger = logging.getLogger(__name__)
-
-RawTables = list[list[list[str | None]]]
 
 
 class PdfHandle:
@@ -49,8 +48,9 @@ class PdfHandle:
         logger.info("Fitz edge extraction: %.1f ms", elapsed_ms)
 
         for page in doc.pages:
-            page.lines = edges_and_vertices_by_page.get(page.page_number, [])[0]
-            page.vertices = edges_and_vertices_by_page.get(page.page_number, [])[1]
+            lines, vertices = edges_and_vertices_by_page.get(page.page_number, ([], []))
+            page.lines = lines
+            page.vertices = vertices
 
         return doc
 

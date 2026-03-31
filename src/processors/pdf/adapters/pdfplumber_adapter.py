@@ -11,10 +11,9 @@ import pdfplumber
 
 from ..enums import DocumentStatus
 from ..schemas import Document, DocumentMetadata, Page, Section, WordBox
+from ..types import RawTables
 
 logger = logging.getLogger(__name__)
-
-RawTables = list[list[list[str | None]]]
 
 MIN_WORDS_THRESHOLD = 30
 
