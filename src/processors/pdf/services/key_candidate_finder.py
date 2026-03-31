@@ -1,3 +1,4 @@
+from ..enums import ExtractionMethod
 from ..schemas import FieldSpec, KeyCandidate, WordBox
 from ..spatial import find_phrase_line, find_phrase_ngram
 
@@ -11,7 +12,7 @@ class KeyCandidateFinder:
                 KeyCandidate(
                     key=field.key,
                     confidence=1.0,
-                    method="ngram",
+                    method=ExtractionMethod.NGRAM,
                     bbox=bbox,
                 )
             )
@@ -21,7 +22,7 @@ class KeyCandidateFinder:
                 KeyCandidate(
                     key=field.key,
                     confidence=0.93,
-                    method="alias",
+                    method=ExtractionMethod.ALIAS,
                     bbox=bbox,
                 )
             )
@@ -32,7 +33,7 @@ class KeyCandidateFinder:
                     KeyCandidate(
                         key=field.key,
                         confidence=0.85,
-                        method="line_fallback",
+                        method=ExtractionMethod.LINE_FALLBACK,
                         bbox=bbox,
                     )
                 )

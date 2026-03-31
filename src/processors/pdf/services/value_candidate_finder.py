@@ -1,5 +1,6 @@
 import logging
 
+from ..enums import SearchZone
 from ..schemas import (
     FieldSpec,
     KeyCandidate,
@@ -17,7 +18,7 @@ _BELOW_ROW_Y_DRIFT = 3.0
 _VERTEX_TOL = 5.0
 
 
-def _merge_boxes(words: list[WordBox], zone: str) -> ValueCandidate:
+def _merge_boxes(words: list[WordBox], zone: SearchZone) -> ValueCandidate:
     parts: list[str] = []
     x0 = x1 = top = bottom = 0.0
     for i, w in enumerate(words):
@@ -69,14 +70,14 @@ def _same_row_words(key: WordBox, ctx: PageContext) -> list[WordBox]:
 
 def _find_right_of_key(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
     candidates = _same_row_words(key, ctx)
-    return [_merge_boxes(g, "right_of_key") for g in _group_by_gap(candidates)]
+    return [_merge_boxes(g, SearchZone.RIGHT_OF_KEY) for g in _group_by_gap(candidates)]
 
 
 def _find_same_row_after_colon(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
     candidates = _same_row_words(key, ctx)
     if candidates and candidates[0].text.strip() in (":", ";"):
         candidates = candidates[1:]
-    return [_merge_boxes(g, "same_row_after_colon") for g in _group_by_gap(candidates)]
+    return [_merge_boxes(g, SearchZone.SAME_ROW_AFTER_COLON) for g in _group_by_gap(candidates)]
 
 
 def _find_below_key(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
@@ -94,7 +95,7 @@ def _find_below_key(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
     if not aligned:
         aligned = first_row
 
-    return [_merge_boxes(g, "below_key") for g in _group_by_gap(aligned)]
+    return [_merge_boxes(g, SearchZone.BELOW_KEY) for g in _group_by_gap(aligned)]
 
 
 def _find_cell_by_vertices(
@@ -174,19 +175,19 @@ def _find_within_cell_bounds(key: WordBox, ctx: PageContext) -> list[ValueCandid
             current_row.append(w)
         else:
             for group in _group_by_gap(current_row):
-                candidates.append(_merge_boxes(group, "within_cell_bounds"))
+                candidates.append(_merge_boxes(group, SearchZone.WITHIN_CELL_BOUNDS))
             current_row = [w]
     for group in _group_by_gap(current_row):
-        candidates.append(_merge_boxes(group, "within_cell_bounds"))
+        candidates.append(_merge_boxes(group, SearchZone.WITHIN_CELL_BOUNDS))
 
     return candidates
 
 
 _ZONE_HANDLERS = {
-    "right_of_key": _find_right_of_key,
-    "same_row_after_colon": _find_same_row_after_colon,
-    "below_key": _find_below_key,
-    "within_cell_bounds": _find_within_cell_bounds,
+    SearchZone.RIGHT_OF_KEY: _find_right_of_key,
+    SearchZone.SAME_ROW_AFTER_COLON: _find_same_row_after_colon,
+    SearchZone.BELOW_KEY: _find_below_key,
+    SearchZone.WITHIN_CELL_BOUNDS: _find_within_cell_bounds,
 }
 
 
@@ -201,14 +202,7 @@ class ValueCandidateFinder:
         candidates: list[ValueCandidate] = []
 
         for zone in field.search_zones:
-            handler = _ZONE_HANDLERS.get(zone)
-            if handler is None:
-                logger.warning(
-                    "Unknown search zone '%s' for field '%s'.", zone, field.key
-                )
-                continue
-
-            for vc in handler(key_candidate.bbox, page_context):
+            for vc in _ZONE_HANDLERS[zone](key_candidate.bbox, page_context):
                 fingerprint = (vc.raw_text, vc.bbox.x0, vc.bbox.top)
                 if fingerprint not in seen:
                     seen.add(fingerprint)

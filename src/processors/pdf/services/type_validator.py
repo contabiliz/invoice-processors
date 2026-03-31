@@ -1,5 +1,3 @@
-import logging
-
 from invoice_models.validators import (
     ValidationResult,
     validate_cnpj,
@@ -11,24 +9,19 @@ from invoice_models.validators import (
     validate_uf,
 )
 
-logger = logging.getLogger(__name__)
+from ..enums import ValueType
 
 _VALIDATORS = {
-    "cnpj": validate_cnpj,
-    "cpf_ou_cnpj": validate_cpf_ou_cnpj,
-    "texto_numerico_44": validate_texto_numerico_44,
-    "moeda_brl": validate_moeda_brl,
-    "data": validate_data,
-    "uf": validate_uf,
-    "texto": validate_texto,
+    ValueType.CNPJ: validate_cnpj,
+    ValueType.CPF_OU_CNPJ: validate_cpf_ou_cnpj,
+    ValueType.TEXTO_NUMERICO_44: validate_texto_numerico_44,
+    ValueType.MOEDA_BRL: validate_moeda_brl,
+    ValueType.DATA: validate_data,
+    ValueType.UF: validate_uf,
+    ValueType.TEXTO: validate_texto,
 }
 
 
 class TypeValidator:
-    def validate(self, value_type: str, raw_text: str) -> ValidationResult:
-        validator = _VALIDATORS.get(value_type)
-        if validator is None:
-            logger.warning("Unknown value_type '%s', treating as texto.", value_type)
-            validator = validate_texto
-
-        return validator(raw_text)
+    def validate(self, value_type: ValueType, raw_text: str) -> ValidationResult:
+        return _VALIDATORS[value_type](raw_text)

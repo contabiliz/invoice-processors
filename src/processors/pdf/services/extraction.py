@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass
 
 from ..adapters import PdfHandle
-from ..enums import DocumentStatus
+from ..enums import DocumentStatus, ExtractionMethod
 from ..profiles.base import FiscalProfile
 from ..schemas import (
     FieldOutput,
@@ -55,7 +55,7 @@ def _missing_to_output(reason: str) -> FieldOutput:
         confidence=0.0,
         bbox=None,
         page=None,
-        method="not_found",
+        method=ExtractionMethod.NOT_FOUND,
         raw_text=None,
         errors=[reason],
     )
