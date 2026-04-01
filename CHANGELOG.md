@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v1.3.0 (2026-04-01)
+
+### Chores
+
+- Update models package version
+  ([`c5b2779`](https://github.com/contabiliz/invoice-processors/commit/c5b2779f72439d668aa1406535419e66ab9df2b5))
+
+### Features
+
+- Add cst_csosn to table extraction items
+  ([`f89d190`](https://github.com/contabiliz/invoice-processors/commit/f89d19019c65cfad37509da318c1c73e2f74c467))
+
+
 ## v1.2.0 (2026-03-31)
 
 ### Bug Fixes
