@@ -53,6 +53,7 @@ def _map_line_items(records: list[dict[str, str | None]]) -> list[PdfLineItem]:
             valor_total_item=_to_decimal(r.get("valor_total_item")),
             cfop=r.get("cfop"),
             ncm=r.get("ncm"),
+            cst_csosn=r.get("cst_csosn"),
         )
         for r in (_normalize_record(raw) for raw in records)
     ]

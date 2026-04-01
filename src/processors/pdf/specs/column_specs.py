@@ -22,23 +22,16 @@ COLUMN_SPECS: dict[str, list[str]] = {
     ],
     "valor_total_item": ["valor total", "vl. total", "vl total"],
     "cfop": ["cfop"],
+    "cst_csosn": ["cst", "o/cst", "csosn"],
     "ncm": ["ncm/sh", "ncm", "ncm sh"],
 }
 
 
 def normalize_header(text: str) -> str:
-    return (
-        unicodedata.normalize("NFKD", text)
-        .encode("ascii", "ignore")
-        .decode()
-        .lower()
-        .strip()
-    )
+    return unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode().lower().strip()
 
 
 # Reverse lookup: normalized alias → canonical field name.
 HEADER_TO_FIELD: dict[str, str] = {
-    normalize_header(alias): field
-    for field, aliases in COLUMN_SPECS.items()
-    for alias in aliases
+    normalize_header(alias): field for field, aliases in COLUMN_SPECS.items() for alias in aliases
 }
