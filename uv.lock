@@ -301,15 +301,15 @@ wheels = [
 
 [[package]]
 name = "invoice-models"
-version = "1.4.0"
-source = { git = "https://github.com/contabiliz/invoice-models.git?tag=v1.4.0#a873d93150379787fc82dd76561393563a445ca3" }
+version = "1.5.0"
+source = { git = "https://github.com/contabiliz/invoice-models.git?tag=v1.5.0#1d8043186ea7f46bff9efafa8b09bee1e2d5044a" }
 dependencies = [
     { name = "pydantic" },
 ]
 
 [[package]]
 name = "invoice-processors"
-version = "1.0.1"
+version = "1.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "invoice-models" },
@@ -330,7 +330,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "invoice-models", git = "https://github.com/contabiliz/invoice-models.git?tag=v1.4.0" },
+    { name = "invoice-models", git = "https://github.com/contabiliz/invoice-models.git?tag=v1.5.0" },
     { name = "lxml" },
     { name = "pdfplumber" },
     { name = "pymupdf" },
