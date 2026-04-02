@@ -56,6 +56,18 @@ def _item_field(node: etree._Element, path: str) -> str:
     return _node_text(results[0])
 
 
+def _extract_cst_csosn(node: etree._Element) -> str:
+    # CST is used by regular tax regime; CSOSN by Simples Nacional. Both live under
+    # <imposto><ICMS><ICMS*> — the wildcard matches any ICMS subgroup (ICMS00, ICMS20, etc.).
+    cst = _xpath_text_optional(node, "nfe:imposto/nfe:ICMS/*/nfe:CST")
+    if cst:
+        return cst
+    csosn = _xpath_text_optional(node, "nfe:imposto/nfe:ICMS/*/nfe:CSOSN")
+    if csosn:
+        return csosn
+    raise ValueError("mandatory item field not found: CST or CSOSN under nfe:imposto/nfe:ICMS")
+
+
 def _extract_items(tree: etree._Element) -> list[NfeLineItem]:
     det_nodes = cast(list[etree._Element], _xpath_list(tree, "//nfe:det"))
     if not det_nodes:
@@ -72,10 +84,15 @@ def _extract_items(tree: etree._Element) -> list[NfeLineItem]:
                 descricao=_item_field(node, "nfe:prod/nfe:xProd"),
                 quantidade=_to_decimal(_item_field(node, "nfe:prod/nfe:qCom"), "quantidade"),
                 unidade=_item_field(node, "nfe:prod/nfe:uCom"),
-                valor_unitario=_to_decimal(_item_field(node, "nfe:prod/nfe:vUnCom"), "valor_unitario"),
-                valor_total_item=_to_decimal(_item_field(node, "nfe:prod/nfe:vProd"), "valor_total_item"),
+                valor_unitario=_to_decimal(
+                    _item_field(node, "nfe:prod/nfe:vUnCom"), "valor_unitario"
+                ),
+                valor_total_item=_to_decimal(
+                    _item_field(node, "nfe:prod/nfe:vProd"), "valor_total_item"
+                ),
                 ncm=_item_field(node, "nfe:prod/nfe:NCM"),
                 cfop=_item_field(node, "nfe:prod/nfe:CFOP"),
+                cst_csosn=_extract_cst_csosn(node),
             )
         )
     return items
@@ -89,7 +106,9 @@ def extract(tree: etree._Element) -> NfeXmlResult:
         documento_destinatario=_extract_documento_destinatario(tree),
         nome_destinatario=_xpath_text(tree, "//nfe:dest/nfe:xNome"),
         data_emissao=_xpath_text(tree, "//nfe:ide/nfe:dhEmi")[:10],  # type: ignore[arg-type]
-        valor_total_nota=_to_decimal(_xpath_text(tree, "//nfe:total/nfe:ICMSTot/nfe:vNF"), "valor_total_nota"),
+        valor_total_nota=_to_decimal(
+            _xpath_text(tree, "//nfe:total/nfe:ICMSTot/nfe:vNF"), "valor_total_nota"
+        ),
         numero_nota=_xpath_text(tree, "//nfe:ide/nfe:nNF"),
         serie=_xpath_text(tree, "//nfe:ide/nfe:serie"),
         items=_extract_items(tree),
