@@ -80,6 +80,16 @@ def _find_same_row_after_colon(key: WordBox, ctx: PageContext) -> list[ValueCand
     return [_merge_boxes(g, SearchZone.SAME_ROW_AFTER_COLON) for g in _group_by_gap(candidates)]
 
 
+def _find_inline_after_colon(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
+    if ":" not in key.text:
+        return []
+    after = key.text.split(":", 1)[1].strip()
+    if not after:
+        return []
+    synthetic = WordBox(text=after, x0=key.x0, x1=key.x1, top=key.top, bottom=key.bottom)
+    return [ValueCandidate(raw_text=after, bbox=synthetic, zone=SearchZone.INLINE_AFTER_COLON)]
+
+
 def _find_below_key(key: WordBox, ctx: PageContext) -> list[ValueCandidate]:
     below = [w for w in ctx.words if w.top >= key.bottom - 1.0]
     if not below:
@@ -186,6 +196,7 @@ def _find_within_cell_bounds(key: WordBox, ctx: PageContext) -> list[ValueCandid
 _ZONE_HANDLERS = {
     SearchZone.RIGHT_OF_KEY: _find_right_of_key,
     SearchZone.SAME_ROW_AFTER_COLON: _find_same_row_after_colon,
+    SearchZone.INLINE_AFTER_COLON: _find_inline_after_colon,
     SearchZone.BELOW_KEY: _find_below_key,
     SearchZone.WITHIN_CELL_BOUNDS: _find_within_cell_bounds,
 }

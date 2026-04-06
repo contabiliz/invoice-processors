@@ -7,10 +7,10 @@ FIELD_SPECS: list[FieldSpec] = [
         key="numero_nota",
         labels=("NUMERO DA NOTA", "NUMERO DO DOCUMENTO", "N°", "Nº"),
         aliases=("NNF", "NUMERO", "N. NF", "N DA NOTA"),
-        value_type=ValueType.TEXTO,
+        value_type=ValueType.NUMERO_NOTA,
         min_key_conf=0.80,
         min_score=0.82,
-        search_zones=(SearchZone.RIGHT_OF_KEY, SearchZone.SAME_ROW_AFTER_COLON, SearchZone.BELOW_KEY),
+        search_zones=(SearchZone.RIGHT_OF_KEY, SearchZone.SAME_ROW_AFTER_COLON),
     ),
     FieldSpec(
         key="chave_acesso",
@@ -28,16 +28,24 @@ FIELD_SPECS: list[FieldSpec] = [
         value_type=ValueType.DATA,
         min_key_conf=0.82,
         min_score=0.84,
-        search_zones=(SearchZone.RIGHT_OF_KEY, SearchZone.SAME_ROW_AFTER_COLON, SearchZone.BELOW_KEY),
+        search_zones=(
+            SearchZone.RIGHT_OF_KEY,
+            SearchZone.SAME_ROW_AFTER_COLON,
+            SearchZone.BELOW_KEY,
+        ),
     ),
     FieldSpec(
         key="serie",
         labels=("SÉRIE",),
         aliases=("SÉRIE:",),
-        value_type=ValueType.TEXTO,
+        value_type=ValueType.SERIE,
         min_key_conf=0.80,
         min_score=0.82,
-        search_zones=(SearchZone.RIGHT_OF_KEY, SearchZone.SAME_ROW_AFTER_COLON, SearchZone.BELOW_KEY),
+        search_zones=(
+            SearchZone.INLINE_AFTER_COLON,
+            SearchZone.RIGHT_OF_KEY,
+            SearchZone.SAME_ROW_AFTER_COLON,
+        ),
     ),
     # EMITENTE
     FieldSpec(

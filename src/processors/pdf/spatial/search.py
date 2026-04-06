@@ -68,8 +68,61 @@ def _merge_word_boxes(window: list[WordBox]) -> WordBox:
 
 
 def find_phrase_line(phrases: str | list[str], boxes: list[WordBox]) -> list[WordBox]:
-    """Fallback: reconstruct lines and search for phrases as substrings. Not yet implemented."""
-    return []
+    """Fallback: reconstruct lines and search for phrases as dense substrings.
+
+    Groups boxes into lines by vertical proximity, concatenates normalized text
+    without spaces (dense), then searches for each phrase (also space-stripped)
+    as a substring. Handles both merged words (e.g. "VALORTOTAL" as one box)
+    and normally separated words uniformly.
+    """
+    if isinstance(phrases, str):
+        phrases = [phrases]
+    if not boxes:
+        return []
+
+    # Group boxes into lines sorted by (top, x0)
+    sorted_boxes = sorted(boxes, key=lambda w: (w.top, w.x0))
+    lines: list[list[WordBox]] = []
+    current_line: list[WordBox] = []
+    ref_top = sorted_boxes[0].top
+
+    for box in sorted_boxes:
+        if current_line and abs(box.top - ref_top) > MAX_Y_DRIFT:
+            lines.append(current_line)
+            current_line = []
+            ref_top = box.top
+        current_line.append(box)
+
+    if current_line:
+        lines.append(current_line)
+
+    results: list[WordBox] = []
+    for line in lines:
+        # Build dense (spaceless) text and a parallel char-to-box index
+        dense = ""
+        char_to_box: list[int] = []
+        for idx, box in enumerate(line):
+            norm = normalize(box.text)
+            dense += norm
+            char_to_box.extend([idx] * len(norm))
+
+        if not dense:
+            continue
+
+        for phrase in phrases:
+            target = normalize(phrase).replace(" ", "")
+            if not target:
+                continue
+            start = 0
+            while (pos := dense.find(target, start)) != -1:
+                end = pos + len(target)
+                contributing = sorted(set(char_to_box[pos:end]))
+                merged = _merge_word_boxes([line[i] for i in contributing])
+                logger.debug("find_phrase_line matched '%s' -> %s", phrase, merged)
+                results.append(merged)
+                start = pos + 1
+
+    return results
 
 
 def find_phrase_ngram(phrases: str | list[str], boxes: list[WordBox]) -> list[WordBox]:
