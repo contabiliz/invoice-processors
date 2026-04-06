@@ -2,6 +2,25 @@
 
 <!-- version list -->
 
+## v1.6.0 (2026-04-06)
+
+### Chores
+
+- Update models package version
+  ([`6d62a73`](https://github.com/contabiliz/invoice-processors/commit/6d62a73f5ef93492e85898f2cc9720871e9861f2))
+
+### Features
+
+- Add new search type ; add new find_phrase_line fallback
+  ([`a0cd4ea`](https://github.com/contabiliz/invoice-processors/commit/a0cd4eae5c32d119ca53d4282d1001084942f10f))
+
+- Add sections for and
+  ([`7e5aa56`](https://github.com/contabiliz/invoice-processors/commit/7e5aa568a7b50fc6b40a4ec1cb1f30a2811c9634))
+
+- Add type validators for and
+  ([`c849034`](https://github.com/contabiliz/invoice-processors/commit/c849034f9959ffa0db9fe1b3b856c0c83daa0522))
+
+
 ## v1.4.0 (2026-04-02)
 
 ### Chores
