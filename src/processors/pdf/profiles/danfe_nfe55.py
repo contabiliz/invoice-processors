@@ -39,6 +39,8 @@ class DanfeNfe55Profile(FiscalProfile):
             "uf_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
             "documento_destinatario": {"section_id": SectionId.DESTINATARIO_REMETENTE},
             "valor_total_nota": {"section_id": SectionId.CALCULO_IMPOSTO},
+            "serie": {"section_id": SectionId.HEADER},
+            "numero_nota": {"section_id": SectionId.HEADER},
         }
 
     @property
