@@ -4,6 +4,8 @@ from invoice_models.validators import (
     validate_cpf_ou_cnpj,
     validate_data,
     validate_moeda_brl,
+    validate_numero_nota,
+    validate_serie,
     validate_texto,
     validate_texto_numerico_44,
     validate_uf,
@@ -19,6 +21,8 @@ _VALIDATORS = {
     ValueType.DATA: validate_data,
     ValueType.UF: validate_uf,
     ValueType.TEXTO: validate_texto,
+    ValueType.SERIE: validate_serie,
+    ValueType.NUMERO_NOTA: validate_numero_nota,
 }
 
 
